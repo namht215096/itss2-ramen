@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import './App.css';
 
 import {
   Area,
@@ -159,4 +160,16 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+function DashboardPage() {
+  return (
+    <div className="App">
+      {/* <header className="App-header">
+      </header> */}
+      <div>
+        <Dashboard />
+      </div>
+    </div>
+  );
+}
+
+export default DashboardPage;

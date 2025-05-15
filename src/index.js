@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import DashboardPage from '../src/pages/dashboard';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/add-daily-budget" element={<div />} />
+        <Route path="/budget-and-saving" element={<div />} />
+        <Route path="/sign-up" element={<div />} />
+        <Route path="/sign-in" element={<div />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

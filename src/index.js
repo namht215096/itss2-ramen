@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import DashboardPage from '../src/pages/dashboard';
+import LandingPage from '../src/pages/landingPage';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
@@ -11,6 +12,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/add-daily-budget" element={<div />} />
         <Route path="/budget-and-saving" element={<div />} />
         <Route path="/sign-up" element={<div />} />

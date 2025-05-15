@@ -53,7 +53,7 @@ const Dashboard = () => {
     return <div>Loading...</div>;
 
   return (
-    <div className="px-96 space-y-6 bg-gray-50 min-h-screen">
+    <div className="px-6 space-y-6 bg-gray-50 min-h-screen">
       {/* Tổng quan */}
       <div className="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
         <div>

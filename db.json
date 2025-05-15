@@ -1,0 +1,25 @@
+{
+    "balance": {
+      "spending": 423.55,
+      "saving": 577.45,
+      "cash": 0
+    },
+    "earnings": {
+      "save": 577.45,
+      "spend": 423.55
+    },
+    "spendingDetails": {
+      "food": 423.55,
+      "rent": 577.45
+    },
+    "savingHistory": [
+      { "date": "2025-05-10", "amount": 10 },
+      { "date": "2025-05-15", "amount": 25 },
+      { "date": "2025-05-20", "amount": 40 },
+      { "date": "2025-05-25", "amount": 55 },
+      { "date": "2025-05-30", "amount": 15 },
+      { "date": "2025-06-01", "amount": 30 },
+      { "date": "2025-06-02", "amount": 48 }
+    ]
+  }
+  

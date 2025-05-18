@@ -1,5 +1,17 @@
 import React from 'react';
 
+const CashCard = () => {
+  return (
+    <div className=" flex justify-between items-center shadow-md p-4 rounded-sm border-2">
+      <div className=" flex flex-col">
+        <span className=" text-gray-500">12 february, 2022</span>
+        <span className=" text-2xl">car</span>
+      </div>
+      <div className=" flex flex-col">500 euros</div>
+    </div>
+  );
+};
+
 const BudgetAddSavingPage = () => {
   return (
     <div className=" ">
@@ -14,7 +26,7 @@ const BudgetAddSavingPage = () => {
             }}>
             Personal
           </div>
-          <div>1</div>
+          <div></div>
         </div>
       </div>
 
@@ -44,16 +56,29 @@ const BudgetAddSavingPage = () => {
         </div>
       </div>
 
-      <div className="m-6 p-4 flex justify-around items-center">
+      <div
+        style={{
+          borderColor: '#44BF99',
+        }}
+        className="m-6 grid grid-cols-3  border-2 rounded-sm overflow-hidden">
         <button
+          className=" p-2 "
           style={{
             backgroundColor: '#44BF99',
           }}>
           Transactions
         </button>
-        <button> Expenses</button>
+        <button className="text-center">Expenses</button>
 
         <button> Goals</button>
+      </div>
+      <div className=" text-center">Cash</div>
+
+      <div className=" flex flex-col gap-2 p-4">
+        <CashCard></CashCard>
+        <CashCard></CashCard>
+        <CashCard></CashCard>
+        <CashCard></CashCard>
       </div>
     </div>
   );

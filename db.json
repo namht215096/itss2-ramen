@@ -1,25 +1,97 @@
 {
-    "balance": {
-      "spending": 423.55,
-      "saving": 577.45,
-      "cash": 0
+  "balance": {
+    "spending": 423.55,
+    "saving": 577.45,
+    "cash": 0
+  },
+  "earnings": {
+    "save": 577.45,
+    "spend": 423.55
+  },
+  "spendingDetails": {
+    "food": 423.55,
+    "rent": 577.45
+  },
+  "savingHistory": [
+    {
+      "date": "2025-05-10",
+      "amount": 10,
+      "id": "f845"
     },
-    "earnings": {
-      "save": 577.45,
-      "spend": 423.55
+    {
+      "date": "2025-05-15",
+      "amount": 25,
+      "id": "42e3"
     },
-    "spendingDetails": {
-      "food": 423.55,
-      "rent": 577.45
+    {
+      "date": "2025-05-20",
+      "amount": 40,
+      "id": "c1a1"
     },
-    "savingHistory": [
-      { "date": "2025-05-10", "amount": 10 },
-      { "date": "2025-05-15", "amount": 25 },
-      { "date": "2025-05-20", "amount": 40 },
-      { "date": "2025-05-25", "amount": 55 },
-      { "date": "2025-05-30", "amount": 15 },
-      { "date": "2025-06-01", "amount": 30 },
-      { "date": "2025-06-02", "amount": 48 }
-    ]
+    {
+      "date": "2025-05-25",
+      "amount": 55,
+      "id": "d862"
+    },
+    {
+      "date": "2025-05-30",
+      "amount": 15,
+      "id": "92d3"
+    },
+    {
+      "date": "2025-06-01",
+      "amount": 30,
+      "id": "8cb2"
+    },
+    {
+      "date": "2025-06-02",
+      "amount": 48,
+      "id": "383f"
+    },
+    {
+      "id": "02e9",
+      "date": "2025-05-19",
+      "amount": 39
+    },
+    {
+      "id": "583e",
+      "date": "2025-05-21",
+      "amount": 3
+    }
+  ],
+  "Goal": {
+    "dailyGoal": [
+      {
+        "date": "2025-05-10",
+        "amount": 10
+      },
+      {
+        "date": "2025-05-15",
+        "amount": 25
+      },
+      {
+        "date": "2025-05-20",
+        "amount": 40
+      },
+      {
+        "date": "2025-05-25",
+        "amount": 55
+      },
+      {
+        "date": "2025-05-30",
+        "amount": 15
+      },
+      {
+        "date": "2025-06-01",
+        "amount": 30
+      },
+      {
+        "date": "2025-06-02",
+        "amount": 48
+      }
+    ],
+    "weeklyGoal": 10,
+    "monthlyGoal": 100,
+    "yearlyGoal": 1000
   }
-  
+}

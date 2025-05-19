@@ -76,10 +76,7 @@ const Dashboard = () => {
               </span>{' '}
               {balanceData.saving.toFixed(2).replace('.', ',')}
             </div>
-            <div>
-              <span className="text-gray-700 font-semibold">Cash:</span>{' '}
-              {balanceData.cash}
-            </div>
+            
           </div>
         </div>
         <PieChart width={180} height={180}>

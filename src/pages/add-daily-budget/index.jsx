@@ -7,7 +7,7 @@ import { Input } from '../../components/input';
  * "Add daily budget" page (no Vite). Works out‑of‑the‑box with
  * Create React App or any React setup that exposes `process.env`.
  *
- * ➡️  Set `REACT_APP_API_URL` (CRA) or `API_URL` in your env files
+ *  Set `REACT_APP_API_URL` (CRA) or `API_URL` in your env files
  *     if your json‑server is **not** at http://localhost:3000.
  */
 const AddDailyBudgetPages = () => {

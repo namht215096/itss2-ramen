@@ -41,14 +41,19 @@ const Dashboard = () => {
       .then((res) => setSpendingData(res.data))
       .catch((err) => console.error(err));
   }, []);
-
   useEffect(() => {
     axios
       .get('http://localhost:3000/savingHistory')
-      .then((res) => setSavingData(res.data))
+      .then((res) => {
+        // copy + sort tăng dần theo ngày
+        const sorted = [...res.data].sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
+        setSavingData(sorted);
+      })
       .catch((err) => console.error(err));
   }, []);
-
+  
   if (!balanceData || !earningData || !spendingData)
     return <div>Loading...</div>;
 
@@ -58,7 +63,7 @@ const Dashboard = () => {
       <div className="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
         <div>
           <div className="text-4xl font-semibold text-gray-700">
-            {(balanceData.spending + balanceData.saving + balanceData.cash)
+            {(balanceData.spending + balanceData.saving )
               .toFixed(2)
               .replace('.', ',')}
           </div>
@@ -72,9 +77,9 @@ const Dashboard = () => {
             </div>
             <div>
               <span className="text-green-700 font-semibold">
-                Saving account:
+                Saving goal:
               </span>{' '}
-              {balanceData.saving.toFixed(2).replace('.', ',')}
+              {balanceData.goal.toFixed(2).replace('.', ',')}
             </div>
             
           </div>

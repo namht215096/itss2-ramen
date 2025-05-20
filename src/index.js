@@ -24,6 +24,7 @@ root.render(
     <BrowserRouter>
       <Routes element>
         <Route path="/" element={<Layout></Layout>}>
+          <Route index element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/add-daily-budget" element={<AddDailyBudgetPages />} />
           <Route path="/budget-and-saving" element={<BudgetAddSavingPage />} />

@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PiggyBank from '../../components/PiggyBank';
 
+
+
 const CashCard = () => {
-
-
-
+  
 
   return (
     <div className="flex justify-between items-center shadow-md p-4 rounded-sm border-2">
@@ -19,13 +20,20 @@ const CashCard = () => {
 };
 
 const BudgetAddSavingPage = () => {
+  const [goalData, setGoalData] = useState(1);
   const [activeTab, setActiveTab] = useState('expenses');
 
-  const [earningData, setEarningData] = useState(null);
-  const [spendingData, setSpendingData] = useState(null);
-  const [savingData, setSavingData] = useState(null);
-  const [goalData, setGoalData] = useState(null);
 
+  useEffect(() => {
+    axios
+      .get('http://localhost:3000/Goal')
+      .then((res) => {
+        console.log('Goal API Response:', res.data);
+        setGoalData(res.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+  
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
@@ -41,7 +49,7 @@ const BudgetAddSavingPage = () => {
 
       <div className="flex flex-col items-center justify-center shadow-md m-6 p-4 gap-2">
         <div className="flex justify-center my-4">
-          <PiggyBank value={0} />
+          <PiggyBank value={goalData?.monthlyGoal ?? 0} />
         </div>
 
         <div className="flex justify-between items-center w-full" style={{ color: '#707974' }}>

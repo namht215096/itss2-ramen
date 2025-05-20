@@ -1,4 +1,16 @@
 import React from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import PiggyBank from '../../components/PiggyBank';
+
+const lottieOptions = () => {
+  return (
+    <DotLottieReact
+      src="path/to/animation.lottie"
+      loop
+      autoplay
+    />
+  );
+};
 
 const CashCard = () => {
   return (
@@ -18,19 +30,20 @@ const BudgetAddSavingPage = () => {
       <div style={{ backgroundColor: '#D4F4E4' }}>
         <h1 className=" p-6">Budget and Saving</h1>
         <div className=" grid grid-cols-2">
-          <div
-            className=" text-center p-2 border-t-0 border-x-0 border-b-4 "
-            style={{
-              color: '#006C52',
-              borderColor: '#006C52',
-            }}>
-            Personal
-          </div>
-          <div></div>
+
+          <lottieOptions></lottieOptions>
+
+
+
         </div>
       </div>
 
       <div className=" flex flex-col items-center justify-center shadow-md m-6 p-4 gap-2">
+
+        <div className="flex justify-center my-4">
+          <PiggyBank value={100} />
+        </div>
+
         <div
           className=" flex justify-between items-center w-full"
           style={{ color: '#707974' }}>
@@ -80,6 +93,7 @@ const BudgetAddSavingPage = () => {
         <CashCard></CashCard>
         <CashCard></CashCard>
       </div>
+
     </div>
   );
 };

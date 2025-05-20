@@ -5,16 +5,14 @@ import PiggyBank from '../../components/PiggyBank';
 
 
 
-const CashCard = () => {
-  
-
+const CashCard = ({ date, note, amount }) => {
   return (
     <div className="flex justify-between items-center shadow-md p-4 rounded-sm border-2">
       <div className="flex flex-col">
-        <span className="text-gray-500">12 February, 2022</span>
-        <span className="text-2xl">Car</span>
+        <span className="text-gray-500">{date}</span>
+        <span className="text-2xl">{note}</span>
       </div>
-      <div className="flex flex-col">500 euros</div>
+      <div className="flex flex-col">{amount} euros</div>
     </div>
   );
 };
@@ -22,7 +20,8 @@ const CashCard = () => {
 const BudgetAddSavingPage = () => {
   const [goalData, setGoalData] = useState(1);
   const [activeTab, setActiveTab] = useState('expenses');
-
+  const [balanceData, setBalanceData] = useState(1);
+  const [expensesData, setExpensesData] = useState([]);
 
   useEffect(() => {
     axios
@@ -33,7 +32,21 @@ const BudgetAddSavingPage = () => {
       })
       .catch((err) => console.error(err));
   }, []);
-  
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3000/balance')
+      .then((res) => setBalanceData(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3000/expenses')
+      .then((res) => setExpensesData(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
@@ -43,7 +56,6 @@ const BudgetAddSavingPage = () => {
       <div style={{ backgroundColor: '#D4F4E4' }}>
         <h1 className="p-6">Budget and Saving</h1>
         <div className="grid grid-cols-2">
-          {/* Optional Lottie animation  */}
         </div>
       </div>
 
@@ -54,19 +66,24 @@ const BudgetAddSavingPage = () => {
 
         <div className="flex justify-between items-center w-full" style={{ color: '#707974' }}>
           <div>Total balance:</div>
-          <div>60,28</div>
+          <div>{((balanceData.spending ?? 0) + (balanceData.saving ?? 0))
+            .toFixed(2)
+            .replace('.', ',')}
+          </div>
         </div>
         <div className="flex justify-between items-center w-full" style={{ color: '#3799D2' }}>
           <div>Spending account:</div>
-          <div>60,28</div>
+          <div>{(balanceData.spending ?? 0)
+            .toFixed(2)
+            .replace('.', ',')}
+          </div>
         </div>
         <div style={{ color: '#006C52' }} className="flex justify-between items-center w-full">
           <div>Saving account:</div>
-          <div>60,28</div>
-        </div>
-        <div className="flex justify-between items-center w-full text-gray-70">
-          <div>Cash:</div>
-          <div>60,28</div>
+          <div>{(balanceData.saving ?? 0)
+            .toFixed(2)
+            .replace('.', ',')}
+          </div>
         </div>
       </div>
 
@@ -88,10 +105,14 @@ const BudgetAddSavingPage = () => {
       <div className="flex flex-col gap-2 p-4">
         {activeTab === 'expenses' ? (
           <>
-            <CashCard />
-            <CashCard />
-            <CashCard />
-            <CashCard />
+            {expensesData.map((expense, index) => (
+              <CashCard
+                key={index}
+                date={expense.date}
+                note={expense.note}
+                amount={expense.amount}
+              />
+            ))}
           </>
         ) : (
           <div className="goals-section bg-white p-4 rounded shadow">
@@ -102,7 +123,6 @@ const BudgetAddSavingPage = () => {
                 <p className="font-semibold">Goal: Car</p>
                 <p>Target Amount: <span className="font-bold">500 euros</span></p>
                 <p>Current Savings: <span className="font-bold">300 euros</span></p>
-                <p>Deadline: <span className="font-bold">12 March, 2022</span></p>
 
               </div>
             </div>
@@ -114,9 +134,8 @@ const BudgetAddSavingPage = () => {
                   <option value="weekly">Weekly Goal</option>
                   <option value="monthly">Monthly Goal</option>
                 </select>
-              </div>              
+              </div>
               <input type="number" placeholder="Target Amount" required className="input-field" />
-              <input type="number" placeholder="Current Savings" value="0" readOnly className="input-field" />
               <input type="date" required className="input-field" />
               <button type="submit" className="submit-button">Add Goal</button>
             </form>

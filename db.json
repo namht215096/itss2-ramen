@@ -12,6 +12,18 @@
     "food": 423.55,
     "rent": 577.45
   },
+  "expenses": [
+    {
+      "date": "2025-05-10",
+      "amount": 10,
+      "note" :"food"
+    },
+    {
+      "date": "2025-05-11",
+      "amount": 99,
+      "note" :"car"
+    }
+  ],
   "savingHistory": [
     {
       "date": "2025-05-10",

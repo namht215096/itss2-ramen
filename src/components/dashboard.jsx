@@ -59,7 +59,6 @@ const Dashboard = () => {
 
   return (
     <div className="px-6 space-y-6 bg-gray-50 min-h-screen">
-      {/* Tổng quan */}
       <div className="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
         <div>
           <div className="text-4xl font-semibold text-gray-700">

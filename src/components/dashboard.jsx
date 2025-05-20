@@ -27,7 +27,7 @@ const Dashboard = () => {
       .then((res) => setBalanceData(res.data))
       .catch((err) => console.error(err));
   }, []);
-
+ 
   useEffect(() => {
     axios
       .get('http://localhost:3000/earnings')

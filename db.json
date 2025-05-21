@@ -1,25 +1,89 @@
 {
-    "balance": {
-      "spending": 423.55,
-      "saving": 577.45,
-      "cash": 0
+  "balance": {
+    "spending": 423.55,
+    "saving": 577.45,
+    "cash": 0
+  },
+  "earnings": {
+    "save": 577.45,
+    "spend": 423.55
+  },
+  "spendingDetails": {
+    "food": 423.55,
+    "rent": 577.45
+  },
+  "savingHistory": [
+    {
+      "date": "2025-05-10",
+      "amount": 10,
+      "id": "5845"
     },
-    "earnings": {
-      "save": 577.45,
-      "spend": 423.55
+    {
+      "date": "2025-05-15",
+      "amount": 25,
+      "id": "e7e6"
     },
-    "spendingDetails": {
-      "food": 423.55,
-      "rent": 577.45
+    {
+      "date": "2025-05-20",
+      "amount": 40,
+      "id": "38cb"
     },
-    "savingHistory": [
-      { "date": "2025-05-10", "amount": 10 },
-      { "date": "2025-05-15", "amount": 25 },
-      { "date": "2025-05-20", "amount": 40 },
-      { "date": "2025-05-25", "amount": 55 },
-      { "date": "2025-05-30", "amount": 15 },
-      { "date": "2025-06-01", "amount": 30 },
-      { "date": "2025-06-02", "amount": 48 }
-    ]
-  }
-  
+    {
+      "date": "2025-05-25",
+      "amount": 55,
+      "id": "86cc"
+    },
+    {
+      "date": "2025-05-30",
+      "amount": 15,
+      "id": "c767"
+    },
+    {
+      "date": "2025-06-01",
+      "amount": 30,
+      "id": "0a0c"
+    },
+    {
+      "date": "2025-06-02",
+      "amount": 48,
+      "id": "d4c7"
+    }
+  ],
+  "money": [
+    {
+      "id": "b4f5",
+      "money": "1121",
+      "reason": null,
+      "date": "2025-05-20T05:03:45.441Z",
+      "type": "expense"
+    },
+    {
+      "id": "2225",
+      "money": "12",
+      "reason": null,
+      "date": "2025-05-19T17:00:00.000Z",
+      "type": "expense"
+    },
+    {
+      "id": "1d5d",
+      "money": "1231234",
+      "reason": null,
+      "date": "2025-05-20T17:00:00.000Z",
+      "type": "expense"
+    },
+    {
+      "id": "9fc2",
+      "money": "123123",
+      "reason": null,
+      "date": "2025-05-20T17:00:00.000Z",
+      "type": "expense"
+    },
+    {
+      "id": "302c",
+      "money": "1231",
+      "reason": null,
+      "date": "2025-05-20T17:00:00.000Z",
+      "type": "expense"
+    }
+  ]
+}

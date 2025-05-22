@@ -5,9 +5,9 @@ import fullGif from './full.gif';
 
 const PiggyBank = ({ value }) => {
   let src;
-  if (value === 0) {
+  if (value < 0) {
     src = emptyGif;
-  } else if (value > 0 && value < 100) {
+  } else if (value = 0 && value < 100) {
     src = standardGif;
   } else if (value >= 100) {
     src = fullGif;

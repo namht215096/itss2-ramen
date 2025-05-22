@@ -23,7 +23,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes element>
-        <Route path="/" element={<Layout></Layout>}>
+        <Route path="/" element={<Layout></Layout>} className="float">
           <Route index element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/add-daily-budget" element={<AddDailyBudgetPages />} />

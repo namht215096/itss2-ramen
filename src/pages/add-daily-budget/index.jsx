@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Input } from '../../components/input';
+import { useNavigate } from 'react-router-dom';
 
-/**
- * "Add daily budget" page (no Vite). Works out‑of‑the‑box with
- * Create React App or any React setup that exposes `process.env`.
- *
- *  Set `REACT_APP_API_URL` (CRA) or `API_URL` in your env files
- *     if your json‑server is **not** at http://localhost:3000.
- */
+
 const AddDailyBudgetPages = () => {
   const [date, setDate] = useState(new Date());
   const [amount, setAmount] = useState('');
+  const [note, setNote] = useState('');
+  const [expenseInfo, setExpenseInfo] = useState(null);
+  const [goalInfo, setGoalInfo] = useState(null);
+  const [popupPos, setPopupPos] = useState(null);
+  const [tab, setTab] = useState('expense');
+  const navigate = useNavigate();
 
-  // Fallback hierarchy: custom env → window level → localhost
+  const calendarRef = useRef(null);
+  const popupRef = useRef(null);
+
   const apiBase =
     process.env.REACT_APP_API_URL ||
     process.env.API_URL ||
@@ -23,30 +26,95 @@ const AddDailyBudgetPages = () => {
 
   const formatDate = (d) => d.toISOString().split('T')[0];
 
+  const fetchData = async (selectedDate) => {
+    const isoDate = formatDate(selectedDate);
+
+    try {
+      const expenseRes = await fetch(`${apiBase}/expenseHistory?date=${isoDate}`);
+      const expenseData = await expenseRes.json();
+      const totalExpense = expenseData.reduce((sum, item) => sum + (item.amount || 0), 0);
+      setExpenseInfo({ amount: totalExpense });
+
+      const goalRes = await fetch(`${apiBase}/Goal`);
+      const goalData = await goalRes.json();
+      const dailyGoal = goalData.item?.dailyGoal?.find((item) => item.date === isoDate);
+      setGoalInfo(dailyGoal || null);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setExpenseInfo(null);
+      setGoalInfo(null);
+    }
+  };
+
+  const handleDayClick = async (value, event) => {
+    setDate(value);
+    await fetchData(value);
+
+    const rect = event.target.getBoundingClientRect();
+    const calendarRect = calendarRef.current.getBoundingClientRect();
+    setPopupPos({
+      top: rect.bottom - calendarRect.top + 5,
+      left: rect.left - calendarRect.left,
+    });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(e.target)
+      ) {
+        setPopupPos(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleConfirm = async () => {
     if (!amount) return;
     const isoDate = formatDate(date);
-    const payload = { date: isoDate, amount: Number(amount) };
+    const newAmount = Number(amount);
 
     try {
-      const res = await fetch(`${apiBase}/savingHistory?date=${isoDate}`);
-      const existing = await res.json();
-
-      if (existing.length) {
-        await fetch(`${apiBase}/savingHistory/${existing[0].id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: payload.amount }),
-        });
-      } else {
-        await fetch(`${apiBase}/savingHistory`, {
+      if (tab === 'expense') {
+        await fetch(`${apiBase}/expenseHistory`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({
+            date: isoDate,
+            amount: newAmount,
+            note: note || '',
+          }),
+        });
+      } else if (tab === 'goal') {
+        const goalRes = await fetch(`${apiBase}/Goal`);
+        const goalData = await goalRes.json();
+        const goalItem = goalData.item || {};
+        const dailyGoals = goalItem.dailyGoal || [];
+
+        const existingIndex = dailyGoals.findIndex((g) => g.date === isoDate);
+        if (existingIndex !== -1) {
+          dailyGoals[existingIndex].amount = newAmount;
+        } else {
+          dailyGoals.push({ date: isoDate, amount: newAmount });
+        }
+
+        await fetch(`${apiBase}/Goal`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            item: {
+              ...goalItem,
+              dailyGoal: dailyGoals,
+            },
+          }),
         });
       }
 
       setAmount('');
+      setNote('');
+      await fetchData(date);
       alert('Saved!');
     } catch (err) {
       console.error(err);
@@ -55,40 +123,51 @@ const AddDailyBudgetPages = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       {/* Header */}
       <div style={{ backgroundColor: '#D4F4E4' }}>
-        <h1 className="p-6">Add daily budget</h1>
+        <h1 className=" p-6 text-2xl font-bold">{tab === 'expense' ? 'Add daily expense' : 'Set daily goal'}</h1>
+
         <div className="grid grid-cols-2">
           <div
-            className="text-center p-2 border-t-0 border-x-0 border-b-4"
-            style={{ color: '#006C52', borderColor: '#006C52' }}
+            onClick={() => setTab('expense')}
+            className={`text-center p-2 cursor-pointer border-b-4 ${tab === 'expense' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'}`}
           >
             New expense
+          </div>
+          <div
+            onClick={() => setTab('goal')}
+            className={`text-center p-2 cursor-pointer border-b-4 ${tab === 'goal' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'}`}
+          >
+            New goal
           </div>
         </div>
       </div>
 
-      {/* Amount input */}
-      <div className="flex border-x-0 my-8 mx-2 justify-center items-baseline">
+      {/* Input amount */}
+      <div className="flex border-x-0 my-2 mx-2 justify-center items-baseline">
         <Input
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           type="number"
-          placeholder="0"
-          className="text-7xl h-20 shadow-none border-x-0 border-t-0 border-b-8 rounded-none"
+          placeholder="expense (VND)"
+          className="w-full border p-2 rounded"
         />
-        <div className="text-2xl">VND</div>
+        <div className="text-2xl"></div>
       </div>
 
-      {/* Calendar */}
-      <div className="flex justify-center items-center">
-        <Calendar
-          value={date}
-          onChange={setDate}
-          className="rounded-md border w-fit text-xl"
-        />
-      </div>
+      {/* Note input (only for expense) */}
+      {tab === 'expense' && (
+        <div className="mx-2">
+          <Input
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            type="text"
+            placeholder="Enter note (optional)"
+            className="w-full border p-2 rounded"
+          />
+        </div>
+      )}
 
       {/* Confirm button */}
       <div className="m-4 text-center">
@@ -100,6 +179,53 @@ const AddDailyBudgetPages = () => {
           Confirm
         </button>
       </div>
+
+      {/* Calendar */}
+      <div className="flex justify-center relative" ref={calendarRef}>
+        <Calendar
+          value={date}
+          onClickDay={handleDayClick}
+          className="rounded-md border text-xl z-10"
+        />
+
+        {/* Popup nổi gần ô ngày */}
+        {popupPos && (
+          <div
+            ref={popupRef}
+            className="absolute bg-white shadow-xl rounded-md p-4 w-64 border z-20 animate-fade-in"
+            style={{ top: popupPos.top, left: popupPos.left }}
+          >
+            <p className="font-semibold">{formatDate(date)}</p>
+            {expenseInfo ? (
+              <p className="text-green-700">expensed: {expenseInfo.amount} VND</p>
+            ) : (
+              <p className="text-gray-500">expensed: 0 VND</p>
+            )}
+            {goalInfo ? (
+              <p className="text-blue-600">Goal: {goalInfo.amount} VND</p>
+            ) : (
+              <p className="text-gray-500">No goal set</p>
+            )}
+            <button
+              className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={() => navigate(`/budget-and-saving?date=${formatDate(date)}`)}
+            >
+              Detail
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Fade animation */}
+      <style>{`
+        .animate-fade-in {
+          animation: fadeIn 0.2s ease-in-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };

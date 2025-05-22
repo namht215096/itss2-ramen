@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-
 import {
   Area,
   AreaChart,
@@ -13,138 +12,208 @@ import {
   YAxis,
 } from 'recharts';
 
-const COLORS = ['#3b82f6', '#10b981'];
-
 const Dashboard = () => {
-  const [balanceData, setBalanceData] = useState(null);
-  const [earningData, setEarningData] = useState(null);
-  const [spendingData, setSpendingData] = useState(null);
-  const [savingData, setSavingData] = useState(null);
+  const [expenseData, setExpenseData] = useState([]);
+  const [goalData, setGoalData] = useState(null);
+
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/balance')
-      .then((res) => setBalanceData(res.data))
-      .catch((err) => console.error(err));
-  }, []);
- 
-  useEffect(() => {
-    axios
-      .get('http://localhost:3000/earnings')
-      .then((res) => setEarningData(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:3000/spendingDetails')
-      .then((res) => setSpendingData(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-  useEffect(() => {
-    axios
-      .get('http://localhost:3000/savingHistory')
+      .get('http://localhost:3000/expenseHistory')
       .then((res) => {
-        // copy + sort tăng dần theo ngày
         const sorted = [...res.data].sort(
           (a, b) => new Date(a.date) - new Date(b.date)
         );
-        setSavingData(sorted);
+        setExpenseData(sorted);
       })
       .catch((err) => console.error(err));
+
+    axios
+      .get('http://localhost:3000/Goal')
+      .then((res) => setGoalData(res.data))
+      .catch((err) => console.error(err));
   }, []);
-  
-  if (!balanceData || !earningData || !spendingData)
-    return <div>Loading...</div>;
+
+  const spendingYearly = expenseData
+    .filter((item) => new Date(item.date).getFullYear() === currentYear)
+    .reduce((sum, item) => sum + item.amount, 0);
+
+  const spendingMonthly = expenseData
+    .filter((item) => {
+      const d = new Date(item.date);
+      return d.getFullYear() === currentYear && d.getMonth() === currentMonth;
+    })
+    .reduce((sum, item) => sum + item.amount, 0);
+
+  const spendingDaily = expenseData
+    .filter((item) => item.date === yesterdayStr)
+    .reduce((sum, item) => sum + item.amount, 0);
+
+  const yearlyGoal = goalData?.item?.yearlyGoal ?? null;
+  const monthlyGoal = goalData?.item?.monthlyGoal ?? null;
+  const dailyGoalEntry = goalData?.item?.dailyGoal?.find(
+    (entry) => entry.date === yesterdayStr
+  );
+  const dailyGoal = dailyGoalEntry?.amount ?? null;
+
+  if (!goalData || expenseData.length === 0)
+    return <div className="p-4">Loading...</div>;
+
+  const getColors = (spending, goal) => {
+    const over = goal != null && spending > goal;
+    return over ? ['#f87171', '#f87171'] : ['#bfdbfe', '#d1fae5'];
+  };
+
+  // ===== Xử lý dữ liệu biểu đồ 5 ngày gần nhất =====
+  const daysToShow = 5;
+  const dates = Array.from({ length: daysToShow }).map((_, i) => {
+    const d = new Date();
+    d.setDate(today.getDate() - (daysToShow - 1 - i));
+    return d.toISOString().slice(0, 10);
+  });
+
+  const groupedData = dates.map((date) => {
+    const sameDayItems = expenseData.filter((item) => item.date === date);
+    const totalAmount = sameDayItems.reduce((sum, item) => sum + item.amount, 0);
+    return { date, amount: totalAmount };
+  });
 
   return (
-    <div className="px-6 space-y-6 bg-gray-50 min-h-screen">
+    <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">
+      {/* Yearly */}
       <div className="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
         <div>
           <div className="text-4xl font-semibold text-gray-700">
-            {(balanceData.spending + balanceData.saving )
+            {(yearlyGoal ? yearlyGoal - spendingYearly : 0)
               .toFixed(2)
               .replace('.', ',')}
           </div>
-          <div className="text-gray-400 text-xl">Total balance</div>
+          <div className="text-gray-400 text-xl">yearly saving</div>
           <div className="mt-2 space-y-1 text-sm">
             <div>
-              <span className="text-blue-700 font-semibold">
-                Spending account:
-              </span>{' '}
-              {balanceData.spending.toFixed(2).replace('.', ',')}
+              <span className="text-blue-700 font-semibold">Spending:</span>{' '}
+              {spendingYearly.toFixed(2).replace('.', ',')}
             </div>
             <div>
-              <span className="text-green-700 font-semibold">
-                Saving goal:
-              </span>{' '}
-              {balanceData.goal.toFixed(2).replace('.', ',')}
+              <span className="text-green-700 font-semibold"> goal:</span>{' '}
+              {yearlyGoal != null
+                ? yearlyGoal.toFixed(2).replace('.', ',')
+                : 'not set'}
             </div>
-            
           </div>
         </div>
         <PieChart width={180} height={180}>
           <Pie
             data={[
-              { name: 'Spending', value: balanceData.spending },
-              { name: 'Saving', value: balanceData.saving },
+              { name: 'Spending', value: spendingYearly },
+              {
+                name: 'Saving',
+                value: yearlyGoal ? yearlyGoal - spendingYearly : 0,
+              },
             ]}
             innerRadius={50}
             outerRadius={70}
-            paddingAngle={5}
             dataKey="value">
-            {COLORS.map((color, index) => (
-              <Cell key={index} fill={color} stroke="#3b82f6" />
+            {getColors(spendingYearly, yearlyGoal).map((color, index) => (
+              <Cell key={index} fill={color} />
             ))}
           </Pie>
         </PieChart>
       </div>
 
-      {/* Earnings & Spending */}
+      {/* Monthly & Daily */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Earnings */}
-        <div className="bg-white p-4 rounded-xl shadow">
-          <div className="font-semibold text-lg mb-2">Earnings this month</div>
+        {/* Monthly */}
+        <div className="bg-white p-4 mr-1 rounded-xl shadow flex flex-col items-center text-center">
+          <div className="font-semibold text-lg mb-2">Monthly saving</div>
           <PieChart width={180} height={180}>
             <Pie
               data={[
-                { name: 'Spend', value: earningData.spend },
-                { name: 'Save', value: earningData.save },
+                { name: 'Spending', value: spendingMonthly },
+                {
+                  name: 'Saving',
+                  value: monthlyGoal ? monthlyGoal - spendingMonthly : 0,
+                },
               ]}
               innerRadius={50}
               outerRadius={70}
               dataKey="value">
-              <Cell fill="#bfdbfe" />
-              <Cell fill="#d1fae5" />
+              {getColors(spendingMonthly, monthlyGoal).map((color, index) => (
+                <Cell key={index} fill={color} />
+              ))}
             </Pie>
           </PieChart>
+          <div className="text-sm mt-2 space-y-1">
+            <div>
+              <span className="text-blue-700 font-semibold">Spending:</span>{' '}
+              {spendingMonthly.toFixed(2).replace('.', ',')}
+            </div>
+            <div>
+              <span className="text-green-700 font-semibold">goal:</span>{' '}
+              {monthlyGoal != null
+                ? monthlyGoal.toFixed(2).replace('.', ',')
+                : 'not set'}
+            </div>
+          </div>
         </div>
 
-        {/* Spending */}
-        <div className="bg-white p-4 rounded-xl shadow">
-          <div className="font-semibold text-lg mb-2">Spent this month</div>
+        {/* Daily */}
+        <div className="bg-white p-4 ml-1 rounded-xl shadow flex flex-col items-center text-center">
+          <div className="font-semibold text-lg mb-2">daily saving</div>
           <PieChart width={180} height={180}>
             <Pie
               data={[
-                { name: 'Food', value: spendingData.food },
-                { name: 'Rent', value: spendingData.rent },
+                { name: 'Spending', value: spendingDaily },
+                {
+                  name: 'Saving',
+                  value: dailyGoal ? dailyGoal - spendingDaily : 0,
+                },
               ]}
               innerRadius={50}
               outerRadius={70}
               dataKey="value">
-              <Cell fill="#d1fae5" />
-              <Cell fill="#bfdbfe" />
+              {getColors(spendingDaily, dailyGoal).map((color, index) => (
+                <Cell key={index} fill={color} />
+              ))}
             </Pie>
           </PieChart>
+          <div className="text-sm mt-2 space-y-1">
+            <div>
+              <span className="text-blue-700 font-semibold">Spending:</span>{' '}
+              {spendingDaily.toFixed(2).replace('.', ',')}
+            </div>
+            <div>
+              <span className="text-green-700 font-semibold">goal:</span>{' '}
+              {dailyGoal != null
+                ? dailyGoal.toFixed(2).replace('.', ',')
+                : 'not set'}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Saving Chart */}
+      {/* Chart */}
       <div className="bg-white p-6 rounded-xl shadow">
-        <div className="font-semibold text-lg mb-4">Saving</div>
+        <div className="font-semibold text-lg mb-4">Expenses (Last 5 Days)</div>
         <ResponsiveContainer width="100%" height={250}>
-          <AreaChart data={savingData}>
-            <XAxis dataKey="date" />
+          <AreaChart data={groupedData}>
+          <XAxis
+  dataKey="date"
+  tickFormatter={(dateStr) => {
+    const d = new Date(dateStr);
+    d.setDate(d.getDate() + 1); // đẩy ngày lên 1 ngày
+    // Trả về định dạng "dd/MM" cho dễ nhìn
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    return `${day}/${month}`;
+  }}
+/>
             <YAxis />
             <Tooltip />
             <Area

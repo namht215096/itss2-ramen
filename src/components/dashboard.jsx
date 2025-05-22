@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Area,
   AreaChart,
@@ -11,10 +10,13 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { AuthContext } from '../index'; // chỉnh đúng path nếu khác
 
 const Dashboard = () => {
+  const { user } = useContext(AuthContext);
   const [expenseData, setExpenseData] = useState([]);
   const [goalData, setGoalData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const today = new Date();
   const currentYear = today.getFullYear();
@@ -24,21 +26,27 @@ const Dashboard = () => {
   const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/expenseHistory')
-      .then((res) => {
-        const sorted = [...res.data].sort(
+    const fetchUserData = async () => {
+      if (!user) return;
+
+      try {
+        const res = await fetch(`http://localhost:3000/users/${user.id}`);
+        const data = await res.json();
+
+        const sortedExpense = [...data.expenseHistory].sort(
           (a, b) => new Date(a.date) - new Date(b.date)
         );
-        setExpenseData(sorted);
-      })
-      .catch((err) => console.error(err));
+        setExpenseData(sortedExpense);
+        setGoalData(data.Goal);
+      } catch (err) {
+        console.error('Lỗi khi fetch dữ liệu user:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    axios
-      .get('http://localhost:3000/Goal')
-      .then((res) => setGoalData(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+    fetchUserData();
+  }, [user]);
 
   const spendingYearly = expenseData
     .filter((item) => new Date(item.date).getFullYear() === currentYear)
@@ -62,15 +70,11 @@ const Dashboard = () => {
   );
   const dailyGoal = dailyGoalEntry?.amount ?? null;
 
-  if (!goalData || expenseData.length === 0)
-    return <div className="p-4">Loading...</div>;
-
   const getColors = (spending, goal) => {
     const over = goal != null && spending > goal;
     return over ? ['#f87171', '#f87171'] : ['#bfdbfe', '#d1fae5'];
   };
 
-  // ===== Xử lý dữ liệu biểu đồ 5 ngày gần nhất =====
   const daysToShow = 5;
   const dates = Array.from({ length: daysToShow }).map((_, i) => {
     const d = new Date();
@@ -83,6 +87,9 @@ const Dashboard = () => {
     const totalAmount = sameDayItems.reduce((sum, item) => sum + item.amount, 0);
     return { date, amount: totalAmount };
   });
+
+  if (loading || !goalData || expenseData.length === 0)
+    return <div className="p-4">Loading...</div>;
 
   return (
     <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">
@@ -101,7 +108,7 @@ const Dashboard = () => {
               {spendingYearly.toFixed(2).replace('.', ',')}
             </div>
             <div>
-              <span className="text-green-700 font-semibold"> goal:</span>{' '}
+              <span className="text-green-700 font-semibold">goal:</span>{' '}
               {yearlyGoal != null
                 ? yearlyGoal.toFixed(2).replace('.', ',')
                 : 'not set'}
@@ -203,17 +210,16 @@ const Dashboard = () => {
         <div className="font-semibold text-lg mb-4">Expenses (Last 5 Days)</div>
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={groupedData}>
-          <XAxis
-  dataKey="date"
-  tickFormatter={(dateStr) => {
-    const d = new Date(dateStr);
-    d.setDate(d.getDate() + 1); // đẩy ngày lên 1 ngày
-    // Trả về định dạng "dd/MM" cho dễ nhìn
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    return `${day}/${month}`;
-  }}
-/>
+            <XAxis
+              dataKey="date"
+              tickFormatter={(dateStr) => {
+                const d = new Date(dateStr);
+                d.setDate(d.getDate() + 1);
+                const day = d.getDate().toString().padStart(2, '0');
+                const month = (d.getMonth() + 1).toString().padStart(2, '0');
+                return `${day}/${month}`;
+              }}
+            />
             <YAxis />
             <Tooltip />
             <Area

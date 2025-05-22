@@ -1,63 +1,117 @@
 {
-  "balance": {
-    "spending": 423.55,
-    "saving": 577.45,
-    "goal": 500
-  },
-  "earnings": {
-    "save": 577.45,
-    "spend": 423.55
-  },
-  "spendingDetails": {
-    "food": 423.55,
-    "rent": 577.45
-  },
-  "expenseHistory": [
+  "users": [
     {
-      "date": "2025-05-10",
-      "amount": 10,
-      "note": "Groceries",
-      "id": "f845"
-    },
-    {
-      "id": "afc2",
-      "date": "2025-05-20",
-      "amount": 11,
-      "note": "car"
-    },
-    {
-      "id": "0bf2",
-      "date": "2025-05-20",
-      "amount": 1,
-      "note": "car2"
-    },
-    {
-      "id": "8dbc",
-      "date": "2025-05-21",
-      "amount": 10,
-      "note": ""
-    },
-    {
-      "id": "5418",
-      "date": "2025-05-21",
-      "amount": 2,
-      "note": "car"
-    }
-  ],
-  "Goal": {
-    "item": {
-      "dailyGoal": [
+      "id": "user1",
+      "username": "user1",
+      "password": "pass1",
+      "expenseHistory": [
         {
-          "date": "2025-05-19",
-          "amount": 20
+          "date": "2025-05-10",
+          "amount": 10,
+          "note": "Groceries",
+          "id": "f845"
         },
         {
+          "id": "afc2",
+          "date": "2025-05-20",
+          "amount": 11,
+          "note": "car"
+        },
+        {
+          "id": "0bf2",
+          "date": "2025-05-20",
+          "amount": 1,
+          "note": "car2"
+        },
+        {
+          "id": "8dbc",
           "date": "2025-05-21",
-          "amount": 11
+          "amount": 10,
+          "note": ""
+        },
+        {
+          "id": "5418",
+          "date": "2025-05-21",
+          "amount": 2,
+          "note": "car"
+        },
+        {
+          "id": "088e",
+          "date": "2025-05-22",
+          "amount": 22,
+          "note": ""
+        },
+        {
+          "id": "7b32",
+          "date": "2025-05-01",
+          "amount": 2,
+          "note": "a"
         }
       ],
-      "monthlyGoal":100, 
-      "yearlyGoal":500 
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-19",
+              "amount": 20
+            },
+            {
+              "date": "2025-05-21",
+              "amount": 11
+            }
+          ],
+          "monthlyGoal": 100,
+          "yearlyGoal": 500
+        }
+      }
+    },
+    {
+      "id": "user2",
+      "username": "user2",
+      "password": "pass2",
+      
+      "expenseHistory": [
+        {
+          "id": "8dbc",
+          "date": "2025-05-21",
+          "amount": 10,
+          "note": ""
+        },
+        {
+          "id": "5418",
+          "date": "2025-05-21",
+          "amount": 2,
+          "note": "car"
+        },
+        {
+          "id": "088e",
+          "date": "2025-05-22",
+          "amount": 22,
+          "note": ""
+        },
+        {
+          "id": "7b32",
+          "date": "2025-05-01",
+          "amount": 2,
+          "note": "user2"
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-19",
+              "amount": 20
+            },
+            {
+              "date": "2025-05-21",
+              "amount": 11
+            }
+          ],
+          "monthlyGoal": 100,
+          "yearlyGoal": 200
+        }
+      }
     }
-  }
+  ]
 }

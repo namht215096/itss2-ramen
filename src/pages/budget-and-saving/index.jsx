@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import axios from 'axios';
 import PiggyBank from '../../components/PiggyBank';
 import { useLocation } from 'react-router-dom';
+import { AuthContext } from '../../index'; // giả sử AuthContext ở đây
 
 const CashCard = ({ date, note, amount }) => {
   return (
@@ -20,12 +21,14 @@ const BudgetAddSavingPage = () => {
   const searchParams = new URLSearchParams(location.search);
   const filterDate = searchParams.get('date');
 
+  const { user } = useContext(AuthContext);
   const [dailyGoal, setDailyGoal] = useState(0);
   const [expensesData, setExpensesData] = useState([]);
   const [totalExpense, setTotalExpense] = useState(0);
   const [saving, setSaving] = useState(0);
 
-  // Tính ngày hiển thị nhanh hơn 1 ngày (filterDate - 1 ngày)
+  const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
   const displayDate = useMemo(() => {
     if (!filterDate) return '';
     const dateObj = new Date(filterDate);
@@ -33,39 +36,41 @@ const BudgetAddSavingPage = () => {
     return dateObj.toISOString().split('T')[0];
   }, [filterDate]);
 
-  // Load Goal data và tìm goal cho filterDate (giữ nguyên filterDate, không đổi)
+  // Load user data when filterDate or user changes
   useEffect(() => {
-    if (!filterDate) return;
+    if (!filterDate || !user) return;
 
-    axios.get('http://localhost:3000/Goal')
-      .then((res) => {
-        const dailyGoals = res.data?.item?.dailyGoal || [];
+    // Lấy data user từ API
+    axios.get(`${apiBase}/users/${user.id}`)
+      .then(res => {
+        const userData = res.data;
+
+        // Lấy dailyGoal từ userData.Goal.item.dailyGoal
+        const dailyGoals = userData.Goal?.item?.dailyGoal || [];
         const goalForDate = dailyGoals.find(g => g.date === filterDate);
         setDailyGoal(goalForDate ? goalForDate.amount : 0);
-      })
-      .catch(err => console.error(err));
-  }, [filterDate]);
 
-  // Load expenses cho filterDate (giữ nguyên filterDate)
-  useEffect(() => {
-    if (!filterDate) return;
-
-    axios.get('http://localhost:3000/expenseHistory')
-      .then((res) => {
-        const allExpenses = res.data;
+        // Lấy expenseHistory lọc theo ngày
+        const allExpenses = userData.expenseHistory || [];
         const filtered = allExpenses.filter(item => item.date === filterDate);
         setExpensesData(filtered);
 
         const total = filtered.reduce((sum, item) => sum + item.amount, 0);
         setTotalExpense(total);
       })
-      .catch(err => console.error(err));
-  }, [filterDate]);
+      .catch(err => {
+        console.error(err);
+        setDailyGoal(0);
+        setExpensesData([]);
+        setTotalExpense(0);
+      });
+  }, [filterDate, user, apiBase]);
 
-  // Tính saving = goal - expense
   useEffect(() => {
     setSaving(dailyGoal - totalExpense);
   }, [dailyGoal, totalExpense]);
+
+  if (!user) return <div className="p-4 text-center">Please login to see your budget and saving.</div>;
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -97,7 +102,7 @@ const BudgetAddSavingPage = () => {
         {expensesData.length > 0 ? (
           expensesData.map((expense, index) => (
             <CashCard
-              key={index}
+              key={expense.id || index}
               date={expense.date}
               note={expense.note}
               amount={expense.amount}

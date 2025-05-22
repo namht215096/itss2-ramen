@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Input } from '../../components/input';
 import { useNavigate } from 'react-router-dom';
-
+import { AuthContext } from '../../index';
 
 const AddDailyBudgetPages = () => {
+  const { user } = useContext(AuthContext);
   const [date, setDate] = useState(new Date());
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
@@ -18,26 +19,27 @@ const AddDailyBudgetPages = () => {
   const calendarRef = useRef(null);
   const popupRef = useRef(null);
 
-  const apiBase =
-    process.env.REACT_APP_API_URL ||
-    process.env.API_URL ||
-    window.API_URL ||
-    'http://localhost:3000';
-
+  const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:3000';
   const formatDate = (d) => d.toISOString().split('T')[0];
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   const fetchData = async (selectedDate) => {
     const isoDate = formatDate(selectedDate);
 
     try {
-      const expenseRes = await fetch(`${apiBase}/expenseHistory?date=${isoDate}`);
-      const expenseData = await expenseRes.json();
-      const totalExpense = expenseData.reduce((sum, item) => sum + (item.amount || 0), 0);
+      const res = await fetch(`${apiBase}/users/${user.id}`);
+      const data = await res.json();
+
+      const expenses = data.expenseHistory?.filter(e => e.date === isoDate) || [];
+      const totalExpense = expenses.reduce((sum, item) => sum + (item.amount || 0), 0);
       setExpenseInfo({ amount: totalExpense });
 
-      const goalRes = await fetch(`${apiBase}/Goal`);
-      const goalData = await goalRes.json();
-      const dailyGoal = goalData.item?.dailyGoal?.find((item) => item.date === isoDate);
+      const dailyGoal = data.Goal?.item?.dailyGoal?.find(g => g.date === isoDate);
       setGoalInfo(dailyGoal || null);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -60,10 +62,7 @@ const AddDailyBudgetPages = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(e.target)
-      ) {
+      if (popupRef.current && !popupRef.current.contains(e.target)) {
         setPopupPos(null);
       }
     };
@@ -73,24 +72,33 @@ const AddDailyBudgetPages = () => {
 
   const handleConfirm = async () => {
     if (!amount) return;
+
     const isoDate = formatDate(date);
     const newAmount = Number(amount);
 
     try {
+      const res = await fetch(`${apiBase}/users/${user.id}`);
+      const data = await res.json();
+
       if (tab === 'expense') {
-        await fetch(`${apiBase}/expenseHistory`, {
-          method: 'POST',
+        const newExpense = {
+          id: Math.random().toString(16).slice(2, 6),
+          date: isoDate,
+          amount: newAmount,
+          note: note || '',
+        };
+
+        const updatedExpenses = [...(data.expenseHistory || []), newExpense];
+
+        await fetch(`${apiBase}/users/${user.id}`, {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            date: isoDate,
-            amount: newAmount,
-            note: note || '',
+            expenseHistory: updatedExpenses,
           }),
         });
       } else if (tab === 'goal') {
-        const goalRes = await fetch(`${apiBase}/Goal`);
-        const goalData = await goalRes.json();
-        const goalItem = goalData.item || {};
+        const goalItem = data.Goal?.item || {};
         const dailyGoals = goalItem.dailyGoal || [];
 
         const existingIndex = dailyGoals.findIndex((g) => g.date === isoDate);
@@ -100,13 +108,15 @@ const AddDailyBudgetPages = () => {
           dailyGoals.push({ date: isoDate, amount: newAmount });
         }
 
-        await fetch(`${apiBase}/Goal`, {
+        await fetch(`${apiBase}/users/${user.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            item: {
-              ...goalItem,
-              dailyGoal: dailyGoals,
+            Goal: {
+              item: {
+                ...goalItem,
+                dailyGoal: dailyGoals,
+              },
             },
           }),
         });
@@ -122,41 +132,53 @@ const AddDailyBudgetPages = () => {
     }
   };
 
+  if (!user) return null;
+
   return (
+    
     <div className="min-h-screen relative">
-      {/* Header */}
+      <button
+  onClick={() => {
+    localStorage.removeItem('user');
+    window.location.href = '/Login';
+  }}
+  className="absolute top-4 right-4 text-sm text-red-500 hover:underline"
+>
+  Logout
+</button>
       <div style={{ backgroundColor: '#D4F4E4' }}>
-        <h1 className=" p-6 text-2xl font-bold">{tab === 'expense' ? 'Add daily expense' : 'Set daily goal'}</h1>
+        <h1 className="p-6 text-2xl font-bold">{tab === 'expense' ? 'Add daily expense' : 'Set daily goal'}</h1>
 
         <div className="grid grid-cols-2">
           <div
             onClick={() => setTab('expense')}
-            className={`text-center p-2 cursor-pointer border-b-4 ${tab === 'expense' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'}`}
+            className={`text-center p-2 cursor-pointer border-b-4 ${
+              tab === 'expense' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'
+            }`}
           >
             New expense
           </div>
           <div
             onClick={() => setTab('goal')}
-            className={`text-center p-2 cursor-pointer border-b-4 ${tab === 'goal' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'}`}
+            className={`text-center p-2 cursor-pointer border-b-4 ${
+              tab === 'goal' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'
+            }`}
           >
             New goal
           </div>
         </div>
       </div>
 
-      {/* Input amount */}
       <div className="flex border-x-0 my-2 mx-2 justify-center items-baseline">
         <Input
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           type="number"
-          placeholder="expense (VND)"
+          placeholder="(VND)"
           className="w-full border p-2 rounded"
         />
-        <div className="text-2xl"></div>
       </div>
 
-      {/* Note input (only for expense) */}
       {tab === 'expense' && (
         <div className="mx-2">
           <Input
@@ -169,7 +191,6 @@ const AddDailyBudgetPages = () => {
         </div>
       )}
 
-      {/* Confirm button */}
       <div className="m-4 text-center">
         <button
           onClick={handleConfirm}
@@ -180,7 +201,6 @@ const AddDailyBudgetPages = () => {
         </button>
       </div>
 
-      {/* Calendar */}
       <div className="flex justify-center relative" ref={calendarRef}>
         <Calendar
           value={date}
@@ -188,23 +208,22 @@ const AddDailyBudgetPages = () => {
           className="rounded-md border text-xl z-10"
         />
 
-        {/* Popup nổi gần ô ngày */}
         {popupPos && (
           <div
             ref={popupRef}
-            className="absolute bg-white shadow-xl rounded-md p-4 w-64 border z-20 animate-fade-in"
+            className="absolute bg-white shadow-xl rounded-md p-4 w-40 border z-20 animate-fade-in"
             style={{ top: popupPos.top, left: popupPos.left }}
           >
             <p className="font-semibold">{formatDate(date)}</p>
             {expenseInfo ? (
-              <p className="text-green-700">expensed: {expenseInfo.amount} VND</p>
+              <p className="text-green-700 text-sm">expensed: {expenseInfo.amount} VND</p>
             ) : (
-              <p className="text-gray-500">expensed: 0 VND</p>
+              <p className="text-gray-500 text-sm">expensed: 0 VND</p>
             )}
             {goalInfo ? (
-              <p className="text-blue-600">Goal: {goalInfo.amount} VND</p>
+              <p className="text-blue-600 text-sm">Goal: {goalInfo.amount} VND</p>
             ) : (
-              <p className="text-gray-500">No goal set</p>
+              <p className="text-gray-500 text-sm">No goal set</p>
             )}
             <button
               className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -216,7 +235,6 @@ const AddDailyBudgetPages = () => {
         )}
       </div>
 
-      {/* Fade animation */}
       <style>{`
         .animate-fade-in {
           animation: fadeIn 0.2s ease-in-out;

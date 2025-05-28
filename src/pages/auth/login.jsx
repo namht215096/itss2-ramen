@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../index'; // đường dẫn đúng tới nơi tạo context
 
@@ -38,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 bg-white rounded shadow">
+    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 my-60 bg-white rounded shadow">
       <h2 className="text-xl mb-4 font-semibold">Đăng nhập</h2>
       <input
         type="text"
@@ -60,6 +61,12 @@ const Login = () => {
       <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
         Đăng nhập
       </button>
+      <p className="text-sm mt-4 text-center">
+        Chưa có tài khoản?{' '}
+        <Link to="/signup" className="text-blue-600 hover:underline">
+          Đăng ký
+        </Link>
+      </p>
     </form>
   );
 };

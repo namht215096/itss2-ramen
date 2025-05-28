@@ -3,6 +3,7 @@
     {
       "id": "user1",
       "username": "user1",
+      "displayname": "nguoi dung1",
       "password": "pass1",
       "expenseHistory": [
         {
@@ -46,6 +47,12 @@
           "date": "2025-05-01",
           "amount": 2,
           "note": "a"
+        },
+        {
+          "id": "688c",
+          "date": "2025-05-27",
+          "amount": 20,
+          "note": "test"
         }
       ],
       "Goal": {
@@ -58,9 +65,17 @@
             {
               "date": "2025-05-21",
               "amount": 11
+            },
+            {
+              "date": "2025-05-22",
+              "amount": 30
+            },
+            {
+              "date": "2025-05-27",
+              "amount": 30
             }
           ],
-          "monthlyGoal": 100,
+          "monthlyGoal": 22,
           "yearlyGoal": 500
         }
       }
@@ -68,8 +83,8 @@
     {
       "id": "user2",
       "username": "user2",
+      "displayname": "nguoi dung 2",
       "password": "pass2",
-      
       "expenseHistory": [
         {
           "id": "8dbc",
@@ -110,6 +125,64 @@
           ],
           "monthlyGoal": 100,
           "yearlyGoal": 200
+        }
+      }
+    },
+    {
+      "id": "user3",
+      "username": "user3",
+      "displayname": "ndz",
+      "password": "123",
+      "expenseHistory": [],
+      "Goal": {
+        "item": {
+          "dailyGoal": [],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748417678710",
+      "username": "user4",
+      "password": "123",
+      "displayname": "4",
+      "expenseHistory": [
+        {
+          "id": "5b09",
+          "date": "2025-05-27",
+          "amount": 20,
+          "note": ""
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-27",
+              "amount": 30
+            },
+            {
+              "date": "2025-05-28",
+              "amount": 1
+            }
+          ],
+          "monthlyGoal": 39,
+          "yearlyGoal": 22222222
+        }
+      }
+    },
+    {
+      "id": "user1748418521837",
+      "username": "user5",
+      "password": "111",
+      "displayname": "5",
+      "expenseHistory": [],
+      "Goal": {
+        "item": {
+          "dailyGoal": [],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
         }
       }
     }

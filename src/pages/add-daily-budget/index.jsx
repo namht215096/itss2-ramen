@@ -14,6 +14,7 @@ const AddDailyBudgetPages = () => {
   const [goalInfo, setGoalInfo] = useState(null);
   const [popupPos, setPopupPos] = useState(null);
   const [tab, setTab] = useState('expense');
+  const [goalType, setGoalType] = useState('daily'); // New: goal type dropdown
   const navigate = useNavigate();
 
   const calendarRef = useRef(null);
@@ -93,32 +94,34 @@ const AddDailyBudgetPages = () => {
         await fetch(`${apiBase}/users/${user.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            expenseHistory: updatedExpenses,
-          }),
+          body: JSON.stringify({ expenseHistory: updatedExpenses }),
         });
       } else if (tab === 'goal') {
         const goalItem = data.Goal?.item || {};
         const dailyGoals = goalItem.dailyGoal || [];
 
-        const existingIndex = dailyGoals.findIndex((g) => g.date === isoDate);
-        if (existingIndex !== -1) {
-          dailyGoals[existingIndex].amount = newAmount;
-        } else {
-          dailyGoals.push({ date: isoDate, amount: newAmount });
+        if (goalType === 'daily') {
+          const existingIndex = dailyGoals.findIndex((g) => g.date === isoDate);
+          if (existingIndex !== -1) {
+            dailyGoals[existingIndex].amount = newAmount;
+          } else {
+            dailyGoals.push({ date: isoDate, amount: newAmount });
+          }
+          goalItem.dailyGoal = dailyGoals;
+        }
+
+        if (goalType === 'monthly') {
+          goalItem.monthlyGoal = newAmount;
+        }
+
+        if (goalType === 'yearly') {
+          goalItem.yearlyGoal = newAmount;
         }
 
         await fetch(`${apiBase}/users/${user.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            Goal: {
-              item: {
-                ...goalItem,
-                dailyGoal: dailyGoals,
-              },
-            },
-          }),
+          body: JSON.stringify({ Goal: { item: goalItem } }),
         });
       }
 
@@ -135,19 +138,9 @@ const AddDailyBudgetPages = () => {
   if (!user) return null;
 
   return (
-    
     <div className="min-h-screen relative">
-      <button
-  onClick={() => {
-    localStorage.removeItem('user');
-    window.location.href = '/Login';
-  }}
-  className="absolute top-4 right-4 text-sm text-red-500 hover:underline"
->
-  Logout
-</button>
       <div style={{ backgroundColor: '#D4F4E4' }}>
-        <h1 className="p-6 text-2xl font-bold">{tab === 'expense' ? 'Add daily expense' : 'Set daily goal'}</h1>
+        <h1 className="p-6 text-2xl font-bold">{tab === 'expense' ? 'Add daily expense' : 'Set goal'}</h1>
 
         <div className="grid grid-cols-2">
           <div
@@ -178,6 +171,21 @@ const AddDailyBudgetPages = () => {
           className="w-full border p-2 rounded"
         />
       </div>
+
+      {tab === 'goal' && (
+        <div className="mx-2 mb-2">
+          <label className="block mb-1 font-semibold">Goal type</label>
+          <select
+            value={goalType}
+            onChange={(e) => setGoalType(e.target.value)}
+            className="w-full border p-2 rounded"
+          >
+            <option value="daily">Daily Goal</option>
+            <option value="monthly">Monthly Goal</option>
+            <option value="yearly">Yearly Goal</option>
+          </select>
+        </div>
+      )}
 
       {tab === 'expense' && (
         <div className="mx-2">

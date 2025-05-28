@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { AuthContext } from '../index'; // chỉnh đúng path nếu khác
+import { AuthContext } from '../index';
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -88,8 +88,14 @@ const Dashboard = () => {
     return { date, amount: totalAmount };
   });
 
-  if (loading || !goalData || expenseData.length === 0)
-    return <div className="p-4">Loading...</div>;
+  // Nếu loading hoặc không có dữ liệu/mục tiêu
+  if (loading || !goalData || expenseData.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
+        Không có thông tin
+      </div>
+    );
+  }
 
   return (
     <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">

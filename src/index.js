@@ -1,17 +1,18 @@
 import React, { useState, useEffect, createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Outlet, Route, Routes, Navigate } from 'react-router-dom';
-
+import SignUp from './pages/auth/signup';
 import Navbar from './components/navbar';
 import AddDailyBudgetPages from './pages/add-daily-budget';
 import BudgetAddSavingPage from './pages/budget-and-saving';
 import DashboardPage from './pages/dashboard';
+import UserPage from './pages/user';
 import LogIn from './pages/auth/login';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-// Tạo context để chia sẻ user
+
 export const AuthContext = createContext();
 
 const Layout = ({ user }) => {
@@ -24,7 +25,7 @@ const Layout = ({ user }) => {
 };
 
 const ProtectedRoute = ({ user, children }) => {
-  return user ? children : <Navigate to="/sign-in" />;
+  return user ? children : <Navigate to="login" />;
 };
 
 const App = () => {
@@ -47,7 +48,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout user={user} />}>
             {/* Public */}
-            <Route path="/Login" element={<LogIn />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            
 
             {/* Private routes */}
             <Route
@@ -63,6 +66,14 @@ const App = () => {
               element={
                 <ProtectedRoute user={user}>
                   <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user"
+              element={
+                <ProtectedRoute user={user}>
+                  <UserPage />
                 </ProtectedRoute>
               }
             />

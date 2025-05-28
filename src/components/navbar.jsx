@@ -1,14 +1,15 @@
 import { NavLink } from 'react-router-dom';
 import {
   LayoutGrid,
-  PiggyBank,
+  // PiggyBank,
+  User,
   Plus,
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Dashboard', icon: LayoutGrid, path: '/Dashboard' },
-  { label: 'Budget and Saving', icon: PiggyBank, path: '/budget-and-saving' },
-  { label: 'Add Budget', icon: Plus, path: '/add-daily-budget' },
+  { label: 'Add', icon: Plus, path: '/add-daily-budget' },
+  { label: 'User', icon: User, path: '/user' },
 ];
 
 export default function Navbar() {

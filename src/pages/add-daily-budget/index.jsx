@@ -14,7 +14,7 @@ const AddDailyBudgetPages = () => {
   const [goalInfo, setGoalInfo] = useState(null);
   const [popupPos, setPopupPos] = useState(null);
   const [tab, setTab] = useState('expense');
-  const [goalType, setGoalType] = useState('daily'); // New: goal type dropdown
+  const [goalType, setGoalType] = useState('daily');
   const navigate = useNavigate();
 
   const calendarRef = useRef(null);
@@ -49,16 +49,18 @@ const AddDailyBudgetPages = () => {
     }
   };
 
-  const handleDayClick = async (value, event) => {
+  const handleDayClick = async (value, event = null) => {
     setDate(value);
     await fetchData(value);
 
-    const rect = event.target.getBoundingClientRect();
-    const calendarRect = calendarRef.current.getBoundingClientRect();
-    setPopupPos({
-      top: rect.bottom - calendarRect.top + 5,
-      left: rect.left - calendarRect.left,
-    });
+    if (event && event.target && calendarRef.current) {
+      const rect = event.target.getBoundingClientRect();
+      const calendarRect = calendarRef.current.getBoundingClientRect();
+      setPopupPos({
+        top: rect.bottom - calendarRect.top + 5,
+        left: rect.left - calendarRect.left,
+      });
+    }
   };
 
   useEffect(() => {
@@ -83,7 +85,7 @@ const AddDailyBudgetPages = () => {
 
       if (tab === 'expense') {
         const newExpense = {
-          id: Math.random().toString(16).slice(2, 6),
+          id: `${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
           date: isoDate,
           amount: newAmount,
           note: note || '',
@@ -127,7 +129,7 @@ const AddDailyBudgetPages = () => {
 
       setAmount('');
       setNote('');
-      await fetchData(date);
+      await handleDayClick(date); // cập nhật lại thông tin popup và expense
       alert('Saved!');
     } catch (err) {
       console.error(err);

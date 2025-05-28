@@ -11,6 +11,8 @@ import {
   YAxis,
 } from 'recharts';
 import { AuthContext } from '../index';
+import GoalAlert from './GoalAlert'; // hoặc đúng đường dẫn bạn lưu
+
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -88,14 +90,13 @@ const Dashboard = () => {
     return { date, amount: totalAmount };
   });
 
-  // Nếu loading hoặc không có dữ liệu/mục tiêu
   if (loading || !goalData || expenseData.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
-        Không có thông tin
-      </div>
-    );
-  }
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
+      Loading...
+    </div>
+  );
+}
 
   return (
     <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">
@@ -237,6 +238,9 @@ const Dashboard = () => {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      <GoalAlert spending={spendingDaily} goal={dailyGoal} label="ngày" />
+<GoalAlert spending={spendingMonthly} goal={monthlyGoal} label="tháng" />
+<GoalAlert spending={spendingYearly} goal={yearlyGoal} label="năm" />
     </div>
   );
 };

@@ -34,7 +34,7 @@ const App = () => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  // ⚡ Khôi phục user từ localStorage khi app khởi động
+  // Khôi phục user từ localStorage khi app khởi động
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {

@@ -129,7 +129,21 @@ const AddDailyBudgetPages = () => {
 
       setAmount('');
       setNote('');
-      await handleDayClick(date); // cập nhật lại thông tin popup và expense
+      await fetchData(date);
+
+      // ✅ Cập nhật lại popupPos để hiển thị popup như khi click lịch
+      if (calendarRef.current) {
+        const calendarRect = calendarRef.current.getBoundingClientRect();
+        const todayCell = calendarRef.current.querySelector('.react-calendar__tile--active');
+        if (todayCell) {
+          const rect = todayCell.getBoundingClientRect();
+          setPopupPos({
+            top: rect.bottom - calendarRect.top + 5,
+            left: rect.left - calendarRect.left,
+          });
+        }
+      }
+
       alert('Saved!');
     } catch (err) {
       console.error(err);

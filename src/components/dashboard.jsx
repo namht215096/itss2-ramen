@@ -91,17 +91,17 @@ const Dashboard = () => {
   });
 
   if (loading || !goalData || expenseData.length === 0) {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
-      Loading...
-    </div>
-  );
+  // return (
+  //   <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
+  //     Loading...
+  //   </div>
+  // );
 }
 
   return (
     <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">
       {/* Yearly */}
-      <div className="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
+      <div className="bg-white px-36 py-6 rounded-2xl shadow flex justify-between items-center">
         <div>
           <div className="text-4xl font-semibold text-gray-700">
             {(yearlyGoal ? yearlyGoal - spendingYearly : 0)

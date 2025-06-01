@@ -16,6 +16,7 @@ const AddDailyBudgetPages = () => {
   const [tab, setTab] = useState('expense');
   const [goalType, setGoalType] = useState('daily');
   const [applyTo30Days, setApplyTo30Days] = useState(false);
+  const [showInput, setShowInput] = useState(false);  // <-- thêm state này
 
   const navigate = useNavigate();
   const calendarRef = useRef(null);
@@ -69,17 +70,20 @@ const AddDailyBudgetPages = () => {
     }
   };
 
- useEffect(() => {
-  const fetch = async () => {
-    if (user) {
-      await fetchData(date);
-    }
-  };
-  fetch();
-}, [date, tab, goalType, user]);
+  useEffect(() => {
+    const fetch = async () => {
+      if (user) {
+        await fetchData(date);
+      }
+    };
+    fetch();
+  }, [date, tab, goalType, user]);
 
   const handleDayClick = (value, event = null) => {
     setDate(value);
+    if (!showInput) {
+      setShowInput(true);  // Bấm lần đầu hiện ô nhập liệu
+    }
     if ((tab === 'expense' || goalType === 'daily') && event?.target && calendarRef.current) {
       const rect = event.target.getBoundingClientRect();
       const calendarRect = calendarRef.current.getBoundingClientRect();
@@ -219,67 +223,71 @@ const AddDailyBudgetPages = () => {
         </div>
       </div>
 
-      <div className="flex border-x-0 my-2 mx-2 justify-center items-baseline">
-        <Input
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          type="number"
-          placeholder="(VND)"
-          className="w-full border p-2 rounded"
-        />
-      </div>
+      {showInput && (
+        <>
+          <div className="flex border-x-0 my-2 mx-2 justify-center items-baseline">
+            <Input
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              type="number"
+              placeholder="(VND)"
+              className="w-full border p-2 rounded"
+            />
+          </div>
 
-      {tab === 'goal' && (
-        <div className="mx-2 mb-2">
-          <select
-            value={goalType}
-            onChange={(e) => setGoalType(e.target.value)}
-            className="w-full border p-2 rounded"
-          >
-            <option value="daily">Daily Goal</option>
-            <option value="monthly">Monthly Goal</option>
-            <option value="yearly">Yearly Goal</option>
-          </select>
+          {tab === 'goal' && (
+            <div className="mx-2 mb-2">
+              <select
+                value={goalType}
+                onChange={(e) => setGoalType(e.target.value)}
+                className="w-full border p-2 rounded"
+              >
+                <option value="daily">Daily Goal</option>
+                <option value="monthly">Monthly Goal</option>
+                <option value="yearly">Yearly Goal</option>
+              </select>
 
-          {goalType === 'daily' && (
-            <div className="mt-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  className="mr-2"
-                  checked={applyTo30Days}
-                  onChange={() => setApplyTo30Days(!applyTo30Days)}
-                />
-                Áp dụng cho 30 ngày tiếp theo
-              </label>
+              {goalType === 'daily' && (
+                <div className="mt-2">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      checked={applyTo30Days}
+                      onChange={() => setApplyTo30Days(!applyTo30Days)}
+                    />
+                    Áp dụng cho 30 ngày tiếp theo
+                  </label>
+                </div>
+              )}
             </div>
           )}
-        </div>
+
+          {tab === 'expense' && (
+            <div className="mx-2">
+              <Input
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                type="text"
+                placeholder="Enter note (optional)"
+                className="w-full border p-2 rounded"
+              />
+            </div>
+          )}
+
+          <div className="m-4 text-center">
+            <button
+              onClick={handleConfirm}
+              className="text-white w-60 rounded-sm p-2"
+              style={{ backgroundColor: '#1CA380' }}
+            >
+              Confirm
+            </button>
+          </div>
+        </>
       )}
 
-      {tab === 'expense' && (
-        <div className="mx-2">
-          <Input
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            type="text"
-            placeholder="Enter note (optional)"
-            className="w-full border p-2 rounded"
-          />
-        </div>
-      )}
-
-      <div className="m-4 text-center">
-        <button
-          onClick={handleConfirm}
-          className="text-white w-60 rounded-sm p-2"
-          style={{ backgroundColor: '#1CA380' }}
-        >
-          Confirm
-        </button>
-      </div>
-
-      <div className="flex justify-center relative" ref={calendarRef}>
+      <div className="flex justify-center mt-4 relative" ref={calendarRef}>
         <Calendar
           value={date}
           onClickDay={handleDayClick}

@@ -15,8 +15,9 @@ const AddDailyBudgetPages = () => {
   const [popupPos, setPopupPos] = useState(null);
   const [tab, setTab] = useState('expense');
   const [goalType, setGoalType] = useState('daily');
-  const navigate = useNavigate();
+  const [applyTo30Days, setApplyTo30Days] = useState(false);
 
+  const navigate = useNavigate();
   const calendarRef = useRef(null);
   const popupRef = useRef(null);
 
@@ -29,25 +30,22 @@ const AddDailyBudgetPages = () => {
     }
   }, [user, navigate]);
 
-  // Reset amount và note khi đổi tab hoặc goalType
   useEffect(() => {
     setAmount('');
     setNote('');
+    setApplyTo30Days(false);
   }, [tab, goalType]);
 
   const fetchData = async (selectedDate) => {
     const isoDate = formatDate(selectedDate);
-
     try {
       const res = await fetch(`${apiBase}/users/${user.id}`);
       const data = await res.json();
 
-      // Lấy tổng expense trong ngày
       const expenses = data.expenseHistory?.filter(e => e.date === isoDate) || [];
       const totalExpense = expenses.reduce((sum, item) => sum + (item.amount || 0), 0);
       setExpenseInfo({ amount: totalExpense });
 
-      // Lấy goal trong ngày (dựa vào dailyGoal, có thể tùy chỉnh)
       let goalItem = null;
       if (tab === 'goal') {
         const goals = data.Goal?.item || {};
@@ -59,10 +57,10 @@ const AddDailyBudgetPages = () => {
           goalItem = goals.yearlyGoal != null ? { amount: goals.yearlyGoal } : null;
         }
       } else {
-        // Nếu tab là expense thì lấy dailyGoal tương ứng để hiển thị
         const goals = data.Goal?.item || {};
         goalItem = (goals.dailyGoal || []).find(g => g.date === isoDate) || null;
       }
+
       setGoalInfo(goalItem);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -71,18 +69,18 @@ const AddDailyBudgetPages = () => {
     }
   };
 
-  // Gọi fetchData khi date, tab hoặc goalType thay đổi
-  useEffect(() => {
+ useEffect(() => {
+  const fetch = async () => {
     if (user) {
-      fetchData(date);
+      await fetchData(date);
     }
-  }, [date, tab, goalType, user]);
+  };
+  fetch();
+}, [date, tab, goalType, user]);
 
   const handleDayClick = (value, event = null) => {
     setDate(value);
-
-    // Chỉ hiện popup nếu tab === 'expense' hoặc goalType === 'daily'
-    if ((tab === 'expense' || goalType === 'daily') && event && event.target && calendarRef.current) {
+    if ((tab === 'expense' || goalType === 'daily') && event?.target && calendarRef.current) {
       const rect = event.target.getBoundingClientRect();
       const calendarRect = calendarRef.current.getBoundingClientRect();
       setPopupPos({
@@ -110,7 +108,6 @@ const AddDailyBudgetPages = () => {
       return;
     }
 
-    const isoDate = formatDate(date);
     const newAmount = Number(amount);
     if (isNaN(newAmount) || newAmount <= 0) {
       alert('Please enter a valid amount greater than 0');
@@ -118,11 +115,11 @@ const AddDailyBudgetPages = () => {
     }
 
     try {
-      // Fetch dữ liệu mới nhất trước khi cập nhật
       const res = await fetch(`${apiBase}/users/${user.id}`);
       const data = await res.json();
 
       if (tab === 'expense') {
+        const isoDate = formatDate(date);
         const newExpense = {
           id: `${Date.now()}-${Math.random().toString(16).slice(2, 6)}`,
           date: isoDate,
@@ -131,7 +128,6 @@ const AddDailyBudgetPages = () => {
         };
 
         const updatedExpenses = [...(data.expenseHistory || []), newExpense];
-
         await fetch(`${apiBase}/users/${user.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -139,15 +135,21 @@ const AddDailyBudgetPages = () => {
         });
       } else if (tab === 'goal') {
         const goalItem = { ...(data.Goal?.item || {}) };
-
         if (goalType === 'daily') {
-          const dailyGoals = [...(goalItem.dailyGoal || [])];
-          const existingIndex = dailyGoals.findIndex((g) => g.date === isoDate);
-          if (existingIndex !== -1) {
-            dailyGoals[existingIndex] = { ...dailyGoals[existingIndex], amount: newAmount };
-          } else {
-            dailyGoals.push({ date: isoDate, amount: newAmount });
+          let dailyGoals = [...(goalItem.dailyGoal || [])];
+          for (let i = 0; i < (applyTo30Days ? 30 : 1); i++) {
+            const targetDate = new Date(date);
+            targetDate.setDate(date.getDate() + i);
+            const formatted = formatDate(targetDate);
+            const existingIndex = dailyGoals.findIndex((g) => g.date === formatted);
+
+            if (existingIndex !== -1) {
+              dailyGoals[existingIndex] = { ...dailyGoals[existingIndex], amount: newAmount };
+            } else {
+              dailyGoals.push({ date: formatted, amount: newAmount });
+            }
           }
+
           goalItem.dailyGoal = dailyGoals;
         } else if (goalType === 'monthly') {
           goalItem.monthlyGoal = newAmount;
@@ -164,9 +166,9 @@ const AddDailyBudgetPages = () => {
 
       setAmount('');
       setNote('');
+      setApplyTo30Days(false);
       await fetchData(date);
 
-      // Cập nhật lại popupPos nếu đang ở tab expense hoặc daily goal
       if (tab === 'expense' || goalType === 'daily') {
         if (calendarRef.current) {
           const calendarRect = calendarRef.current.getBoundingClientRect();
@@ -229,7 +231,6 @@ const AddDailyBudgetPages = () => {
 
       {tab === 'goal' && (
         <div className="mx-2 mb-2">
-          <label className="block mb-1 font-semibold">Goal type</label>
           <select
             value={goalType}
             onChange={(e) => setGoalType(e.target.value)}
@@ -239,6 +240,20 @@ const AddDailyBudgetPages = () => {
             <option value="monthly">Monthly Goal</option>
             <option value="yearly">Yearly Goal</option>
           </select>
+
+          {goalType === 'daily' && (
+            <div className="mt-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  checked={applyTo30Days}
+                  onChange={() => setApplyTo30Days(!applyTo30Days)}
+                />
+                Áp dụng cho 30 ngày tiếp theo
+              </label>
+            </div>
+          )}
         </div>
       )}
 

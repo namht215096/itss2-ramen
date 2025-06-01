@@ -89,6 +89,72 @@
           "date": "2025-05-27",
           "amount": 200,
           "note": ""
+        },
+        {
+          "id": "1748744325236-57c0",
+          "date": "2025-06-01",
+          "amount": 12,
+          "note": ""
+        },
+        {
+          "id": "1748744481120-4798",
+          "date": "2025-06-01",
+          "amount": 12,
+          "note": ""
+        },
+        {
+          "id": "1748744534453-f584",
+          "date": "2025-05-31",
+          "amount": 12,
+          "note": ""
+        },
+        {
+          "id": "1748744574736-758b",
+          "date": "2025-06-02",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748744597153-b706",
+          "date": "2025-06-01",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748744626615-8b85",
+          "date": "2025-05-31",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748744736024-0bea",
+          "date": "2025-06-03",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748745486914-ebef",
+          "date": "2025-06-04",
+          "amount": 20,
+          "note": ""
+        },
+        {
+          "id": "1748746244967-0e71",
+          "date": "2025-06-05",
+          "amount": 6,
+          "note": ""
+        },
+        {
+          "id": "1748748877285-c1f9",
+          "date": "2025-06-06",
+          "amount": 7,
+          "note": ""
+        },
+        {
+          "id": "1748748881144-376d",
+          "date": "2025-06-06",
+          "amount": 7,
+          "note": ""
         }
       ],
       "Goal": {
@@ -109,10 +175,42 @@
             {
               "date": "2025-05-27",
               "amount": 300
+            },
+            {
+              "date": "2025-05-31",
+              "amount": 111
+            },
+            {
+              "date": "2025-06-02",
+              "amount": 10
+            },
+            {
+              "date": "2025-06-01",
+              "amount": 1
+            },
+            {
+              "date": "2025-06-03",
+              "amount": 11
+            },
+            {
+              "date": "2025-06-04",
+              "amount": 23
+            },
+            {
+              "date": "2025-06-07",
+              "amount": 20
+            },
+            {
+              "date": "2025-06-05",
+              "amount": 8
+            },
+            {
+              "date": "2025-06-06",
+              "amount": 88
             }
           ],
-          "monthlyGoal": 22,
-          "yearlyGoal": 500
+          "monthlyGoal": 2,
+          "yearlyGoal": 777
         }
       }
     },
@@ -427,6 +525,388 @@
           ],
           "monthlyGoal": 100,
           "yearlyGoal": 1000
+        }
+      }
+    },
+    {
+      "id": "user1748488589423",
+      "username": "user",
+      "password": "1",
+      "displayname": "a",
+      "expenseHistory": [
+        {
+          "id": "1748488995859-62c5",
+          "date": "2025-05-28",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748489014182-99c2",
+          "date": "2025-05-28",
+          "amount": 12,
+          "note": ""
+        },
+        {
+          "id": "1748489016985-4627",
+          "date": "2025-05-28",
+          "amount": 2,
+          "note": ""
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 1
+            },
+            {
+              "date": "2025-05-29",
+              "amount": 3
+            }
+          ],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748489510879",
+      "username": "linh",
+      "password": "vinhlinh",
+      "displayname": "linne",
+      "expenseHistory": [],
+      "Goal": {
+        "item": {
+          "dailyGoal": [],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748489556400",
+      "username": "sylinh",
+      "password": "linhvinh",
+      "displayname": "linnee",
+      "expenseHistory": [
+        {
+          "id": "1748489602715-563f",
+          "date": "2025-05-29",
+          "amount": 120000,
+          "note": "hang"
+        },
+        {
+          "id": "1748489620418-d96f",
+          "date": "2025-05-30",
+          "amount": 40000,
+          "note": "hmm"
+        },
+        {
+          "id": "1748489758449-c506",
+          "date": "2025-05-28",
+          "amount": 100000,
+          "note": ""
+        },
+        {
+          "id": "1748489793484-bc22",
+          "date": "2025-05-28",
+          "amount": 100000,
+          "note": ""
+        },
+        {
+          "id": "1748489810314-f497",
+          "date": "2025-05-29",
+          "amount": 500000,
+          "note": ""
+        },
+        {
+          "id": "1748489838174-b3fe",
+          "date": "2025-05-28",
+          "amount": 500000,
+          "note": ""
+        },
+        {
+          "id": "1748490079610-e578",
+          "date": "2025-05-29",
+          "amount": 12000,
+          "note": "20 mat hang"
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 500000
+            }
+          ],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748490178421",
+      "username": "trung",
+      "password": "123",
+      "displayname": "123",
+      "expenseHistory": [
+        {
+          "id": "1748490216781-5a3f",
+          "date": "2025-05-28",
+          "amount": 1,
+          "note": "xa"
+        },
+        {
+          "id": "1748490240223-2e0d",
+          "date": "2025-05-29",
+          "amount": 11,
+          "note": ""
+        },
+        {
+          "id": "1748490253663-c41d",
+          "date": "2025-05-28",
+          "amount": 11,
+          "note": ""
+        },
+        {
+          "id": "1748490452024-20e7",
+          "date": "2025-05-29",
+          "amount": 1000,
+          "note": "di cho"
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 10
+            }
+          ],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748490850571",
+      "username": "huy",
+      "password": "123456",
+      "displayname": "huy",
+      "expenseHistory": [
+        {
+          "id": "1748490904835-7346",
+          "date": "2025-05-28",
+          "amount": 2,
+          "note": ""
+        },
+        {
+          "id": "1748490922258-41e2",
+          "date": "2025-05-28",
+          "amount": 7,
+          "note": "xe"
+        },
+        {
+          "id": "1748490965399-7124",
+          "date": "2025-05-28",
+          "amount": 2,
+          "note": "ăn"
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 10
+            }
+          ],
+          "monthlyGoal": 100,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748491357899",
+      "username": "q",
+      "password": "q",
+      "displayname": "q",
+      "expenseHistory": [
+        {
+          "id": "1748491401622-2c99",
+          "date": "2025-05-29",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748491409433-0beb",
+          "date": "2025-05-28",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748491420538-96db",
+          "date": "2025-05-28",
+          "amount": 7,
+          "note": ""
+        },
+        {
+          "id": "1748491432467-6896",
+          "date": "2025-05-29",
+          "amount": 1,
+          "note": "ăn"
+        },
+        {
+          "id": "1748491450166-44f5",
+          "date": "2025-05-28",
+          "amount": 10,
+          "note": ""
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 10
+            }
+          ],
+          "monthlyGoal": 1000,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1748491904859",
+      "username": "tung",
+      "password": "123",
+      "displayname": "tung",
+      "expenseHistory": [
+        {
+          "id": "1748491952868-4153",
+          "date": "2025-05-28",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748491966967-977e",
+          "date": "2025-05-28",
+          "amount": 2,
+          "note": "ăn"
+        },
+        {
+          "id": "1748492002926-b547",
+          "date": "2025-05-28",
+          "amount": 10,
+          "note": "xe"
+        },
+        {
+          "id": "1748492313259-786f",
+          "date": "2025-05-29",
+          "amount": 100,
+          "note": "dicho"
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 10
+            }
+          ],
+          "monthlyGoal": 100,
+          "yearlyGoal": 10000
+        }
+      }
+    },
+    {
+      "id": "user1748492931815",
+      "username": "ư",
+      "password": "w",
+      "displayname": "ư",
+      "expenseHistory": [
+        {
+          "id": "1748492993280-c209",
+          "date": "2025-05-28",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748493005868-0e6e",
+          "date": "2025-05-28",
+          "amount": 8,
+          "note": ""
+        },
+        {
+          "id": "1748493046308-8f7f",
+          "date": "2025-05-28",
+          "amount": 10,
+          "note": "xe"
+        },
+        {
+          "id": "1748493125429-0a1c",
+          "date": "2025-05-27",
+          "amount": 10,
+          "note": ""
+        },
+        {
+          "id": "1748741368534-7996",
+          "date": "2025-05-31",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748741384850-1cd3",
+          "date": "2025-06-01",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748744150500-97b2",
+          "date": "2025-06-02",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748744162097-10b3",
+          "date": "2025-06-02",
+          "amount": 2,
+          "note": ""
+        },
+        {
+          "id": "1748744171844-3ac4",
+          "date": "2025-06-02",
+          "amount": 2,
+          "note": ""
+        },
+        {
+          "id": "1748744200129-e46e",
+          "date": "2025-06-04",
+          "amount": 1,
+          "note": "nam"
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-28",
+              "amount": 10
+            },
+            {
+              "date": "2025-06-01",
+              "amount": 2
+            },
+            {
+              "date": "2025-06-02",
+              "amount": 3
+            }
+          ],
+          "monthlyGoal": 100,
+          "yearlyGoal": 10000
         }
       }
     }

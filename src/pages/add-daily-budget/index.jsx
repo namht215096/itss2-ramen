@@ -29,6 +29,12 @@ const AddDailyBudgetPages = () => {
     }
   }, [user, navigate]);
 
+  // Reset amount và note khi đổi tab hoặc goalType
+  useEffect(() => {
+    setAmount('');
+    setNote('');
+  }, [tab, goalType]);
+
   const fetchData = async (selectedDate) => {
     const isoDate = formatDate(selectedDate);
 
@@ -36,12 +42,28 @@ const AddDailyBudgetPages = () => {
       const res = await fetch(`${apiBase}/users/${user.id}`);
       const data = await res.json();
 
+      // Lấy tổng expense trong ngày
       const expenses = data.expenseHistory?.filter(e => e.date === isoDate) || [];
       const totalExpense = expenses.reduce((sum, item) => sum + (item.amount || 0), 0);
       setExpenseInfo({ amount: totalExpense });
 
-      const dailyGoal = data.Goal?.item?.dailyGoal?.find(g => g.date === isoDate);
-      setGoalInfo(dailyGoal || null);
+      // Lấy goal trong ngày (dựa vào dailyGoal, có thể tùy chỉnh)
+      let goalItem = null;
+      if (tab === 'goal') {
+        const goals = data.Goal?.item || {};
+        if (goalType === 'daily') {
+          goalItem = (goals.dailyGoal || []).find(g => g.date === isoDate) || null;
+        } else if (goalType === 'monthly') {
+          goalItem = goals.monthlyGoal != null ? { amount: goals.monthlyGoal } : null;
+        } else if (goalType === 'yearly') {
+          goalItem = goals.yearlyGoal != null ? { amount: goals.yearlyGoal } : null;
+        }
+      } else {
+        // Nếu tab là expense thì lấy dailyGoal tương ứng để hiển thị
+        const goals = data.Goal?.item || {};
+        goalItem = (goals.dailyGoal || []).find(g => g.date === isoDate) || null;
+      }
+      setGoalInfo(goalItem);
     } catch (err) {
       console.error('Error fetching data:', err);
       setExpenseInfo(null);
@@ -49,17 +71,26 @@ const AddDailyBudgetPages = () => {
     }
   };
 
-  const handleDayClick = async (value, event = null) => {
-    setDate(value);
-    await fetchData(value);
+  // Gọi fetchData khi date, tab hoặc goalType thay đổi
+  useEffect(() => {
+    if (user) {
+      fetchData(date);
+    }
+  }, [date, tab, goalType, user]);
 
-    if (event && event.target && calendarRef.current) {
+  const handleDayClick = (value, event = null) => {
+    setDate(value);
+
+    // Chỉ hiện popup nếu tab === 'expense' hoặc goalType === 'daily'
+    if ((tab === 'expense' || goalType === 'daily') && event && event.target && calendarRef.current) {
       const rect = event.target.getBoundingClientRect();
       const calendarRect = calendarRef.current.getBoundingClientRect();
       setPopupPos({
         top: rect.bottom - calendarRect.top + 5,
         left: rect.left - calendarRect.left,
       });
+    } else {
+      setPopupPos(null);
     }
   };
 
@@ -74,12 +105,20 @@ const AddDailyBudgetPages = () => {
   }, []);
 
   const handleConfirm = async () => {
-    if (!amount) return;
+    if (!amount) {
+      alert('Please enter an amount');
+      return;
+    }
 
     const isoDate = formatDate(date);
     const newAmount = Number(amount);
+    if (isNaN(newAmount) || newAmount <= 0) {
+      alert('Please enter a valid amount greater than 0');
+      return;
+    }
 
     try {
+      // Fetch dữ liệu mới nhất trước khi cập nhật
       const res = await fetch(`${apiBase}/users/${user.id}`);
       const data = await res.json();
 
@@ -99,24 +138,20 @@ const AddDailyBudgetPages = () => {
           body: JSON.stringify({ expenseHistory: updatedExpenses }),
         });
       } else if (tab === 'goal') {
-        const goalItem = data.Goal?.item || {};
-        const dailyGoals = goalItem.dailyGoal || [];
+        const goalItem = { ...(data.Goal?.item || {}) };
 
         if (goalType === 'daily') {
+          const dailyGoals = [...(goalItem.dailyGoal || [])];
           const existingIndex = dailyGoals.findIndex((g) => g.date === isoDate);
           if (existingIndex !== -1) {
-            dailyGoals[existingIndex].amount = newAmount;
+            dailyGoals[existingIndex] = { ...dailyGoals[existingIndex], amount: newAmount };
           } else {
             dailyGoals.push({ date: isoDate, amount: newAmount });
           }
           goalItem.dailyGoal = dailyGoals;
-        }
-
-        if (goalType === 'monthly') {
+        } else if (goalType === 'monthly') {
           goalItem.monthlyGoal = newAmount;
-        }
-
-        if (goalType === 'yearly') {
+        } else if (goalType === 'yearly') {
           goalItem.yearlyGoal = newAmount;
         }
 
@@ -131,17 +166,21 @@ const AddDailyBudgetPages = () => {
       setNote('');
       await fetchData(date);
 
-      // ✅ Cập nhật lại popupPos để hiển thị popup như khi click lịch
-      if (calendarRef.current) {
-        const calendarRect = calendarRef.current.getBoundingClientRect();
-        const todayCell = calendarRef.current.querySelector('.react-calendar__tile--active');
-        if (todayCell) {
-          const rect = todayCell.getBoundingClientRect();
-          setPopupPos({
-            top: rect.bottom - calendarRect.top + 5,
-            left: rect.left - calendarRect.left,
-          });
+      // Cập nhật lại popupPos nếu đang ở tab expense hoặc daily goal
+      if (tab === 'expense' || goalType === 'daily') {
+        if (calendarRef.current) {
+          const calendarRect = calendarRef.current.getBoundingClientRect();
+          const todayCell = calendarRef.current.querySelector('.react-calendar__tile--active');
+          if (todayCell) {
+            const rect = todayCell.getBoundingClientRect();
+            setPopupPos({
+              top: rect.bottom - calendarRect.top + 5,
+              left: rect.left - calendarRect.left,
+            });
+          }
         }
+      } else {
+        setPopupPos(null);
       }
 
       alert('Saved!');

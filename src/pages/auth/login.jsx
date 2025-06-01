@@ -27,7 +27,7 @@ const Login = () => {
       const userData = data[0];
       if (userData.password === password) {
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData)); // Lưu user vào localStorage
+        localStorage.setItem('user', JSON.stringify(userData)); 
         navigate('/dashboard');// Điều hướng sau khi đăng nhập
       } else {
         setError('Sai mật khẩu');

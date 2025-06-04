@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -12,7 +12,6 @@ import {
 } from 'recharts';
 import { AuthContext } from '../index';
 import GoalAlert from './GoalAlert'; // hoặc đúng đường dẫn bạn lưu
-
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -32,7 +31,9 @@ const Dashboard = () => {
       if (!user) return;
 
       try {
-        const res = await fetch(`http://localhost:3000/users/${user.id}`);
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/users/${user.id}`
+        );
         const data = await res.json();
 
         const sortedExpense = [...data.expenseHistory].sort(
@@ -86,17 +87,20 @@ const Dashboard = () => {
 
   const groupedData = dates.map((date) => {
     const sameDayItems = expenseData.filter((item) => item.date === date);
-    const totalAmount = sameDayItems.reduce((sum, item) => sum + item.amount, 0);
+    const totalAmount = sameDayItems.reduce(
+      (sum, item) => sum + item.amount,
+      0
+    );
     return { date, amount: totalAmount };
   });
 
   if (loading || !goalData || expenseData.length === 0) {
-  // return (
-  //   <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
-  //     Loading...
-  //   </div>
-  // );
-}
+    // return (
+    //   <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-500 text-xl">
+    //     Loading...
+    //   </div>
+    // );
+  }
 
   return (
     <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">
@@ -239,8 +243,8 @@ const Dashboard = () => {
         </ResponsiveContainer>
       </div>
       <GoalAlert spending={spendingDaily} goal={dailyGoal} label="ngày" />
-<GoalAlert spending={spendingMonthly} goal={monthlyGoal} label="tháng" />
-<GoalAlert spending={spendingYearly} goal={yearlyGoal} label="năm" />
+      <GoalAlert spending={spendingMonthly} goal={monthlyGoal} label="tháng" />
+      <GoalAlert spending={spendingYearly} goal={yearlyGoal} label="năm" />
     </div>
   );
 };

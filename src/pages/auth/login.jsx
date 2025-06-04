@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../index'; // đường dẫn đúng tới nơi tạo context
 
 const Login = () => {
@@ -15,7 +14,9 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:3000/users?username=${username}`);
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/users?username=${username}`
+      );
       if (!res.ok) throw new Error('Lỗi kết nối đến server');
 
       const data = await res.json();
@@ -27,8 +28,8 @@ const Login = () => {
       const userData = data[0];
       if (userData.password === password) {
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData)); 
-        navigate('/dashboard');// Điều hướng sau khi đăng nhập
+        localStorage.setItem('user', JSON.stringify(userData));
+        navigate('/dashboard'); // Điều hướng sau khi đăng nhập
       } else {
         setError('Sai mật khẩu');
       }
@@ -39,7 +40,9 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 my-60 bg-white rounded shadow">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-sm mx-auto p-4 my-60 bg-white rounded shadow">
       <h2 className="text-xl mb-4 font-semibold">Đăng nhập</h2>
       <input
         type="text"
@@ -58,7 +61,9 @@ const Login = () => {
         required
       />
       {error && <p className="text-red-500 mb-3">{error}</p>}
-      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+      <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-2 rounded">
         Đăng nhập
       </button>
       <p className="text-sm mt-4 text-center">

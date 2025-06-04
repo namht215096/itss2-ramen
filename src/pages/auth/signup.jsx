@@ -72,7 +72,7 @@ const SignUp = () => {
     <form
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto p-4 my-60 bg-white rounded shadow">
-      <h2 className="text-xl mb-4 font-semibold">Đăng ký</h2>
+      <h2 className="text-xl mb-4 font-semibold">Sign up</h2>
 
       <input
         type="text"

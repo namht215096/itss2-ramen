@@ -197,10 +197,28 @@
       "username": "nam",
       "password": "123",
       "displayname": "nam",
-      "expenseHistory": [],
+      "expenseHistory": [
+        {
+          "id": "1749051668260-7f8d",
+          "date": "2025-06-03",
+          "amount": 1,
+          "note": "test"
+        },
+        {
+          "id": "1749052085011-d183",
+          "date": "2025-06-04",
+          "amount": 23,
+          "note": "t"
+        }
+      ],
       "Goal": {
         "item": {
-          "dailyGoal": [],
+          "dailyGoal": [
+            {
+              "date": "2025-06-03",
+              "amount": 12
+            }
+          ],
           "monthlyGoal": 0,
           "yearlyGoal": 0
         }

@@ -13,7 +13,7 @@ const AddDailyBudgetPages = () => {
   const [expenseInfo, setExpenseInfo] = useState(null);
   const [goalInfo, setGoalInfo] = useState(null);
   const [popupPos, setPopupPos] = useState(null);
-  const [tab, setTab] = useState('expense');
+  const [tab, setTab] = useState('goal');
   const [goalType, setGoalType] = useState('daily');
   const [applyTo30Days, setApplyTo30Days] = useState(false);
   const [showInput, setShowInput] = useState(false);  // <-- thêm state này
@@ -201,17 +201,10 @@ const AddDailyBudgetPages = () => {
   return (
     <div className="min-h-screen relative">
       <div style={{ backgroundColor: '#D4F4E4' }}>
-        <h1 className="p-6 text-2xl font-bold">{tab === 'expense' ? 'Add daily expense' : 'Set goal'}</h1>
+        <h1 className="p-6 text-2xl font-bold">{tab === 'expense' ? 'Add expense' : 'Set goal'}</h1>
 
         <div className="grid grid-cols-2">
-          <div
-            onClick={() => setTab('expense')}
-            className={`text-center p-2 cursor-pointer border-b-4 ${
-              tab === 'expense' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'
-            }`}
-          >
-            New expense
-          </div>
+          
           <div
             onClick={() => setTab('goal')}
             className={`text-center p-2 cursor-pointer border-b-4 ${
@@ -219,6 +212,14 @@ const AddDailyBudgetPages = () => {
             }`}
           >
             New goal
+          </div>
+          <div
+            onClick={() => setTab('expense')}
+            className={`text-center p-2 cursor-pointer border-b-4 ${
+              tab === 'expense' ? 'text-[#006C52] border-[#006C52]' : 'border-transparent text-gray-400'
+            }`}
+          >
+            New expense
           </div>
         </div>
       </div>

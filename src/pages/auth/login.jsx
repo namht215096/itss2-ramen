@@ -43,7 +43,7 @@ const Login = () => {
     <form
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto p-4 my-60 bg-white rounded shadow">
-      <h2 className="text-xl mb-4 font-semibold">Đăng nhập</h2>
+      <h2 className="text-xl mb-4 font-semibold">Log in</h2>
       <input
         type="text"
         placeholder="Username"

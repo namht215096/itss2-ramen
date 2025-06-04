@@ -1,5 +1,210 @@
 {
   "users": [
-
+    {
+      "id": "user2",
+      "username": "user2",
+      "displayname": "nguoi dung 2",
+      "password": "pass2",
+      "expenseHistory": [
+        {
+          "id": "8dbc",
+          "date": "2025-05-21",
+          "amount": 10,
+          "note": ""
+        },
+        {
+          "id": "5418",
+          "date": "2025-05-21",
+          "amount": 2,
+          "note": "car"
+        },
+        {
+          "id": "088e",
+          "date": "2025-05-22",
+          "amount": 22,
+          "note": ""
+        },
+        {
+          "id": "7b32",
+          "date": "2025-05-01",
+          "amount": 2,
+          "note": "user2"
+        },
+        {
+          "id": "a644",
+          "date": "2025-05-27",
+          "amount": 20,
+          "note": ""
+        },
+        {
+          "id": "e506",
+          "date": "2025-05-28",
+          "amount": 5,
+          "note": ""
+        },
+        {
+          "id": "b381",
+          "date": "2025-05-28",
+          "amount": 5,
+          "note": ""
+        },
+        {
+          "id": "ab20",
+          "date": "2025-05-28",
+          "amount": 5,
+          "note": ""
+        },
+        {
+          "id": "bf5b",
+          "date": "2025-05-28",
+          "amount": 5,
+          "note": ""
+        },
+        {
+          "id": "275d",
+          "date": "2025-05-28",
+          "amount": 10,
+          "note": ""
+        },
+        {
+          "id": "14ee",
+          "date": "2025-05-27",
+          "amount": 3,
+          "note": ""
+        },
+        {
+          "id": "55f0",
+          "date": "2025-05-27",
+          "amount": 2,
+          "note": ""
+        },
+        {
+          "id": "e329",
+          "date": "2025-05-27",
+          "amount": 2,
+          "note": ""
+        },
+        {
+          "id": "a2e6",
+          "date": "2025-05-29",
+          "amount": 10,
+          "note": ""
+        },
+        {
+          "id": "276b",
+          "date": "2025-05-29",
+          "amount": 5,
+          "note": ""
+        },
+        {
+          "id": "f85e",
+          "date": "2025-05-29",
+          "amount": 4,
+          "note": ""
+        },
+        {
+          "id": "6bb3",
+          "date": "2025-05-29",
+          "amount": 4,
+          "note": ""
+        },
+        {
+          "id": "f669",
+          "date": "2025-05-29",
+          "amount": 4,
+          "note": ""
+        },
+        {
+          "id": "1748424874424-55e3",
+          "date": "2025-05-29",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748424877806-a358",
+          "date": "2025-05-29",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748424895858-0198",
+          "date": "2025-05-30",
+          "amount": 2,
+          "note": ""
+        },
+        {
+          "id": "1748424899313-7766",
+          "date": "2025-05-30",
+          "amount": 1,
+          "note": ""
+        },
+        {
+          "id": "1748424908687-4802",
+          "date": "2025-05-27",
+          "amount": 99,
+          "note": ""
+        }
+      ],
+      "Goal": {
+        "item": {
+          "dailyGoal": [
+            {
+              "date": "2025-05-19",
+              "amount": 20
+            },
+            {
+              "date": "2025-05-21",
+              "amount": 11
+            },
+            {
+              "date": "2025-05-21",
+              "amount": 11
+            },
+            {
+              "date": "2025-05-27",
+              "amount": 33
+            },
+            {
+              "date": "2025-05-29",
+              "amount": 20
+            },
+            {
+              "date": "2025-05-30",
+              "amount": 40
+            }
+          ],
+          "monthlyGoal": 100,
+          "yearlyGoal": 200
+        }
+      }
+    },
+    {
+      "id": "user1749048510779",
+      "username": "laserene",
+      "password": "123456",
+      "displayname": "laserene",
+      "expenseHistory": [],
+      "Goal": {
+        "item": {
+          "dailyGoal": [],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    },
+    {
+      "id": "user1749049520758",
+      "username": "nam",
+      "password": "123",
+      "displayname": "nam",
+      "expenseHistory": [],
+      "Goal": {
+        "item": {
+          "dailyGoal": [],
+          "monthlyGoal": 0,
+          "yearlyGoal": 0
+        }
+      }
+    }
   ]
 }

@@ -256,7 +256,7 @@ const AddDailyBudgetPages = () => {
                       checked={applyTo30Days}
                       onChange={() => setApplyTo30Days(!applyTo30Days)}
                     />
-                    Áp dụng cho 30 ngày tiếp theo
+                    Apply to next 30 days
                   </label>
                 </div>
               )}

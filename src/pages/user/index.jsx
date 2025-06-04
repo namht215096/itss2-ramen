@@ -25,7 +25,9 @@ const UserPage = () => {
   }, [user, apiBase]);
 
   if (!userData) {
-    return <div className="p-6">Đang tải thông tin người dùng...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-white">
+      Loading user...
+      </div>;
   }console.log('userData.Goal.item.dailyGoal:', userData.Goal?.item?.dailyGoal);
   return (
     <div className="min-h-screen bg-white flex flex-col items-center">

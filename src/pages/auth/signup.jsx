@@ -37,7 +37,7 @@ const SignUp = () => {
       const data = await res.json();
 
       if (data.length > 0) {
-        setError('Tên đăng nhập đã tồn tại');
+        setError('Username exists');
         return;
       }
 
@@ -56,7 +56,7 @@ const SignUp = () => {
         body: JSON.stringify(newUser),
       });
 
-      if (!postRes.ok) throw new Error('Đăng ký thất bại');
+      if (!postRes.ok) throw new Error('Sign up failed.');
 
       const createdUser = await postRes.json();
       setUser(createdUser);
@@ -64,7 +64,7 @@ const SignUp = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      setError('Đã xảy ra lỗi khi đăng ký');
+      setError('Sign up error. ');
     }
   };
 
@@ -76,7 +76,7 @@ const SignUp = () => {
 
       <input
         type="text"
-        placeholder="Tên đăng nhập"
+        placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         className="w-full p-2 mb-3 border rounded"
@@ -85,7 +85,7 @@ const SignUp = () => {
 
       <input
         type="text"
-        placeholder="Tên hiển thị"
+        placeholder="Display Name"
         value={displayname}
         onChange={(e) => setDisplayname(e.target.value)}
         className="w-full p-2 mb-3 border rounded"
@@ -94,7 +94,7 @@ const SignUp = () => {
 
       <input
         type="password"
-        placeholder="Mật khẩu"
+        placeholder="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         className="w-full p-2 mb-3 border rounded"
@@ -106,12 +106,12 @@ const SignUp = () => {
       <button
         type="submit"
         className="w-full bg-green-600 text-white py-2 rounded">
-        Đăng ký
+        Sign Up
       </button>
       <p className="text-sm mt-4 text-center">
-        Đã có tài khoản?{' '}
+        having account?{' '}
         <Link to="/login" className="text-blue-600 hover:underline">
-          Đăng nhập
+          Log in
         </Link>
       </p>
     </form>

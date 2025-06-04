@@ -18,9 +18,9 @@ const GoalAlert = ({ spending, goal, label }) => {
 
     if (!alertedRef.current) {
       if (ratio >= 1) {
-        alert(`Bạn đã đạt giới hạn chi tiêu ${label}`);
+        alert(`goal reached ${label}`);
       } else if (ratio >= 0.8) {
-        alert(`Bạn đã gần chạm giới hạn ${label}`);
+        alert(`You are almost reach the goal ${label}`);
       }
       alertedRef.current = true;
     }

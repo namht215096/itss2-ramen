@@ -17,11 +17,11 @@ const Login = () => {
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/users?username=${username}`
       );
-      if (!res.ok) throw new Error('Lỗi kết nối đến server');
+      if (!res.ok) throw new Error('conect to server error');
 
       const data = await res.json();
       if (data.length === 0) {
-        setError('User không tồn tại');
+        setError('User not found');
         return;
       }
 
@@ -31,11 +31,11 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(userData));
         navigate('/dashboard'); // Điều hướng sau khi đăng nhập
       } else {
-        setError('Sai mật khẩu');
+        setError('Wrong password');
       }
     } catch (err) {
       console.error(err);
-      setError('Đã xảy ra lỗi khi đăng nhập');
+      setError('error');
     }
   };
 
@@ -46,7 +46,7 @@ const Login = () => {
       <h2 className="text-xl mb-4 font-semibold">Đăng nhập</h2>
       <input
         type="text"
-        placeholder="Tên đăng nhập"
+        placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         className="w-full p-2 mb-3 border rounded"
@@ -54,7 +54,7 @@ const Login = () => {
       />
       <input
         type="password"
-        placeholder="Mật khẩu"
+        placeholder="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         className="w-full p-2 mb-3 border rounded"
@@ -64,12 +64,12 @@ const Login = () => {
       <button
         type="submit"
         className="w-full bg-blue-600 text-white py-2 rounded">
-        Đăng nhập
+        Login
       </button>
       <p className="text-sm mt-4 text-center">
-        Chưa có tài khoản?{' '}
+        No account?{' '}
         <Link to="/signup" className="text-blue-600 hover:underline">
-          Đăng ký
+          Sign up
         </Link>
       </p>
     </form>

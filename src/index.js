@@ -45,56 +45,54 @@ const App = () => {
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout user={user} />}>
-            {/* Public */}
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            
+        <Route path="/" element={<Layout user={user} />}>
+  {/* Public */}
+  <Route path="/login" element={<LogIn />} />
+  <Route path="/signup" element={<SignUp />} />
 
-            {/* Private routes */}
-            <Route
-              index
-              element={
-                <ProtectedRoute user={user}>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute user={user}>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/user"
-              element={
-                <ProtectedRoute user={user}>
-                  <UserPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/add-daily-budget"
-              element={
-                <ProtectedRoute user={user}>
-                  <AddDailyBudgetPages />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/budget-and-saving"
-              element={
-                <ProtectedRoute user={user}>
-                  <BudgetAddSavingPage />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-        </Routes>
+  {/* Redirect root to login or dashboard */}
+  <Route
+    index
+    element={
+      user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+    }
+  />
+
+  {/* Private routes */}
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute user={user}>
+        <DashboardPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/user"
+    element={
+      <ProtectedRoute user={user}>
+        <UserPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/add-daily-budget"
+    element={
+      <ProtectedRoute user={user}>
+        <AddDailyBudgetPages />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/budget-and-saving"
+    element={
+      <ProtectedRoute user={user}>
+        <BudgetAddSavingPage />
+      </ProtectedRoute>
+    }
+  />
+</Route>
+
       </BrowserRouter>
     </AuthContext.Provider>
   );

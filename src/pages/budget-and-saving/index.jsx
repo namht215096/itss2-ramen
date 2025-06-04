@@ -27,12 +27,12 @@ const BudgetAddSavingPage = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const [saving, setSaving] = useState(0);
 
-  const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+  const apiBase = process.env.REACT_APP_API_URL || 'process.env.REACT_APP_API_URL';
 
   const displayDate = useMemo(() => {
     if (!filterDate) return '';
     const dateObj = new Date(filterDate);
-    dateObj.setDate(dateObj.getDate() - 1);
+    dateObj.setDate(dateObj.getDate() + 1);
     return dateObj.toISOString().split('T')[0];
   }, [filterDate]);
 
@@ -84,15 +84,15 @@ const BudgetAddSavingPage = () => {
         </div>
 
         <div className="flex justify-between items-center w-full" style={{ color: '#707974' }}>
-          <div>Goal ({displayDate}):</div>
+          <div>Goal :</div>
           <div>{dailyGoal.toFixed(2).replace('.', ',')}</div>
         </div>
         <div className="flex justify-between items-center w-full" style={{ color: '#3799D2' }}>
-          <div>Expense ({displayDate}):</div>
+          <div>Expense :</div>
           <div>{totalExpense.toFixed(2).replace('.', ',')}</div>
         </div>
         <div style={{ color: '#006C52' }} className="flex justify-between items-center w-full">
-          <div>Saving ({displayDate}):</div>
+          <div>Saving :</div>
           <div>{saving.toFixed(2).replace('.', ',')}</div>
         </div>
       </div>
@@ -103,7 +103,7 @@ const BudgetAddSavingPage = () => {
           expensesData.map((expense, index) => (
             <CashCard
               key={expense.id || index}
-              date={expense.date}
+              date={new Date(new Date(expense.date).setDate(new Date(expense.date).getDate() + 1)).toISOString().split('T')[0]}
               note={expense.note}
               amount={expense.amount}
             />

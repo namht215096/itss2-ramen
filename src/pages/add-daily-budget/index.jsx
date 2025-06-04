@@ -287,7 +287,7 @@ const AddDailyBudgetPages = () => {
         </>
       )}
 
-      <div className="flex justify-center mt-4 relative" ref={calendarRef}>
+      <div className="flex justify-center mt-4 relative z-0 mb-2" ref={calendarRef}>
         <Calendar
           value={date}
           onClickDay={handleDayClick}
@@ -300,7 +300,7 @@ const AddDailyBudgetPages = () => {
             className="absolute bg-white shadow-xl rounded-md p-4 w-40 border z-20 animate-fade-in"
             style={{ top: popupPos.top, left: popupPos.left }}
           >
-            <p className="font-semibold">{formatDate(date)}</p>
+            {/* <p className="font-semibold">{formatDate(date)}</p> */}
             {expenseInfo ? (
               <p className="text-green-700 text-sm">expensed: {expenseInfo.amount} VND</p>
             ) : (

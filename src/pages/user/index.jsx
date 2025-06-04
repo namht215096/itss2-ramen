@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../index';
-import { Pencil } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+
 
 const InfoRow = ({ label, value }) => (
   <div className="flex justify-between items-start border-b pb-2">
     <div className="text-gray-800 font-semibold">{label}</div>
     <div className="flex-1 text-right text-gray-600 ml-4">{value}</div>
-    <Pencil size={16} className="ml-2 text-blue-500 cursor-pointer" />
   </div>
 );
 
@@ -42,7 +42,6 @@ const UserPage = () => {
           />
           <h2 className="text-xl font-semibold flex justify-center items-center mt-2">{userData.displayname}
             <p className="text-gray-500 flex justify-center items-center gap-1">
-            <Pencil size={14} className="text-blue-500 cursor-pointer" />
           </p>
           </h2>
           

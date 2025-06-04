@@ -19,7 +19,7 @@ const Layout = ({ user }) => {
   return (
     <div className="h-screen">
       <Outlet />
-      {user && <Navbar />}
+      {user && <Navbar className="z-100" />}
     </div>
   );
 };

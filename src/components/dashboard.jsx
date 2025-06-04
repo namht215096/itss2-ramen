@@ -11,7 +11,8 @@ import {
   YAxis,
 } from 'recharts';
 import { AuthContext } from '../index';
-import GoalAlert from './GoalAlert'; // hoặc đúng đường dẫn bạn lưu
+import GoalAlert from './GoalAlert'; 
+import PiggyBank from './PiggyBank';
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -106,13 +107,16 @@ const Dashboard = () => {
     <div className="px-6 py-4 space-y-6 bg-gray-50 min-h-screen">
       {/* Yearly */}
       <div className="bg-white px-36 py-6 rounded-2xl shadow flex justify-between items-center">
+        
         <div>
           <div className="text-4xl font-semibold text-gray-700">
             {(yearlyGoal ? yearlyGoal - spendingYearly : 0)
               .toFixed(2)
               .replace('.', ',')}
           </div>
+          
           <div className="text-gray-400 text-xl">yearly saving</div>
+          
           <div className="mt-2 space-y-1 text-sm">
             <div>
               <span className="text-blue-700 font-semibold">Spending:</span>{' '}
@@ -126,6 +130,9 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        <div className='scale-75'>
+            <PiggyBank  value={(yearlyGoal ? yearlyGoal - spendingYearly : 0)}/>
+          </div>
         <PieChart width={180} height={180}>
           <Pie
             data={[
